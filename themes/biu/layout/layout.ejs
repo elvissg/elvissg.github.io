@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="<%=config.language%>">
+
+<!-- head  -->
+<head>
+    <%- partial('_partials/head') %>
+</head>
+<!-- /head -->
+
+<!-- body -->
+<body>
+    <!-- nav  -->
+    <nav id="navbar">
+        <%- partial('_partials/nav') %>
+    </nav>
+    <!-- /nav -->
+
+    <!-- main section -->
+    <section>
+        <%- body %>
+    </section>
+    <!-- /main -->
+
+    <!-- footer -->
+    <footer>
+        <%- partial('_partials/footer') %>
+    </footer>
+    <!-- /footer -->
+
+
+<% if (theme.scripts !== undefined && theme.scripts.length > 0) { %>
+    <!-- scripts list from theme config.yml -->
+    <% theme.scripts.forEach(function(url) { js(url) }); %>
+<% } %>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- head  -->
+<head>
+    <meta charset="UTF-8">       
+<title>
+    
+    Python-Request库学习笔记 | Hexo
+    
+</title>
+
+    <!-- stylesheets list from config.yml -->
+    
+    <link rel="stylesheet" href="/css/biu.css">
+    
+                      
+
+</head>
+<!-- /head -->
+
+<!-- body -->
+<body>
+    <!-- nav  -->
+    <nav id="navbar">
+        <div id="menu-outer">
+    <div id="navbar-brand">
+        <span id="brand-logo">Jelvis</span>
+    </div>
+    <div id="menu-inner">
+        <a href="/">主页</a>
+    </div>
+</div>
+
+    </nav>
+    <!-- /nav -->
+
+    <!-- main section -->
+    <section>
+        
+<article id="post">
+  <h1>Python-Request库学习笔记</h1>
+  <ul>
+<li>基本Get请求：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+r = requests.get(url)
+print r.text
+</code></pre><hr>
+<ul>
+<li>带参数Get请求：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+payload = {&apos;key1&apos;: &apos;value1&apos;, &apos;key2&apos;: &apos;value2&apos;}
+r = requests.get(url, params=payload)
+print r.text
+</code></pre><ul>
+<li>POST请求模拟登陆及一些返回对象的方法：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+res1 = requests.post(url1, data=data, headers=headers)
+res2 = requests.get(url2, cookies=res1.cookies, headers=headers)
+
+print res2.content#获得二进制响应内容
+print res2.raw#获得原始响应内容,需要stream=True
+print res2.raw.read(50)
+print type(res2.text)#返回解码成unicode的内容
+print res2.url
+print res2.history#追踪重定向
+print res2.cookies
+print res2.cookies[&apos;example_cookie_name&apos;]
+print res2.headers
+print res2.headers[&apos;Content-Type&apos;]
+print res2.headers.get(&apos;content-type&apos;)
+print res2.json#讲返回内容编码为json
+print res2.encoding#返回内容编码
+print res2.status_code#返回http状态码
+print res2.raise_for_status()#返回错误状态码
+</code></pre><hr>
+<ul>
+<li>使用Session()对象的写法（Prepared Requests）:</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+s = requests.Session()
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+
+prepped1 = requests.Request(&apos;POST&apos;, url1,
+    data=data,
+    headers=headers
+).prepare()
+s.send(prepped1)
+
+
+&apos;&apos;&apos;
+也可以这样写
+res = requests.Request(&apos;POST&apos;, url1,
+data=data,
+headers=headers
+)
+prepared = s.prepare_request(res)
+# do something with prepped.body
+# do something with prepped.headers
+s.send(prepared)
+&apos;&apos;&apos;
+
+prepare2 = requests.Request(&apos;POST&apos;, url2,
+    headers=headers
+).prepare()
+res2 = s.send(prepare2)
+
+print res2.content
+</code></pre><ul>
+<li>另一种写法 :</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+s = requests.Session()
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的页面地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+res1 = s.post(url1, data=data)
+res2 = s.post(url2)
+print(resp2.content)
+</code></pre><p><a href="http://cn.python-requests.org/en/latest/api.html#sessionapi" target="_blank" rel="external">SessionApi</a></p>
+<ul>
+<li>其他的一些请求方式</li>
+</ul>
+<pre><code>&gt;&gt;&gt; r = requests.put(&quot;http://httpbin.org/put&quot;)
+&gt;&gt;&gt; r = requests.delete(&quot;http://httpbin.org/delete&quot;)
+&gt;&gt;&gt; r = requests.head(&quot;http://httpbin.org/get&quot;)
+&gt;&gt;&gt; r = requests.options(&quot;http://httpbin.org/get&quot;)
+</code></pre><p>##遇到的问题:</p>
+<hr>
+<p>在cmd下执行，遇到个小错误:</p>
+<pre><code>UnicodeEncodeError:&apos;gbk&apos; codec can&apos;t encode character u&apos;\xbb&apos; in   
+position 23460: illegal multibyte sequence
+</code></pre><p>分析:<br>1、Unicode是编码还是解码</p>
+<pre><code>UnicodeEncodeError
+</code></pre><p>很明显是在编码的时候出现了错误</p>
+<p>2、用了什么编码</p>
+<pre><code>&apos;gbk&apos; codec can&apos;t encode character
+</code></pre><p>使用GBK编码出错</p>
+<p>##解决办法：<br>确定当前字符串，比如</p>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+r = requests.get(url)
+print r.encoding
+&gt;utf-8
+</code></pre><p>已经确定html的字符串是utf-8的，则可以直接去通过utf-8去编码。</p>
+<pre><code>print r.text.encode(&apos;utf-8&apos;)
+</code></pre><hr>
+<p>参考链接：<a href="http://www.python-requests.org/en/latest/" target="_blank" rel="external">官方文档</a>            </p>
+
+</article>
+
+
+<nav id="pagination">
+  
+    <a href="/2015/06/20/LNMP安装/" class="prev">&larr; Prev</a>
+  
+
+  
+
+  
+    <a href="/2015/05/19/gentoo安装/" class="next">Next &rarr;</a>
+  
+</nav>
+
+
+    </section>
+    <!-- /main -->
+
+    <!-- footer -->
+    <footer>
+        <div id="bottom-outer">
+  <div id="bottom-inner">
+    Site by Jelvis using
+    <a href="http://hexo.io">hexo blog framework</a>.
+    <br>
+    <a href="/">Home</a>
+  </div>
+</div>
+
+    </footer>
+    <!-- /footer -->
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+
+
+</body>
+</html>

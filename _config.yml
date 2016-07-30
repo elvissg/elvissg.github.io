@@ -1,0 +1,27 @@
+deploy:
+  type: git
+  repository: https://github.com/elvissg/elvissg.github.io.git
+  branch: master
+#html lang
+language: zh-CN
+
+author: Jelvis
+
+# main menu navigation
+menu:
+  Home: /
+  About: /about
+
+# Miscelaneous
+favicon: /favicon.ico
+
+# stylesheets loaded in the <head>
+stylesheets:
+- /css/biu.css
+
+# scripts loaded in the end of the body
+scripts:
+- /js/biu.js
+
+theme: biu
+

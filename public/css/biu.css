@@ -1,0 +1,55 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-color: #555;
+  font-size: 16px;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+a {
+  text-decoration: none;
+  color: #555;
+}
+a:visited {
+  color: #555;
+}
+#navbar::before {
+  content: ' ';
+  display: block;
+  height: 2px;
+  position: absolute;
+  width: 100%;
+  background: #a9a9a9;
+}
+#navbar {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  opacity: 0.9;
+  box-shadow: 0 0 25px rgba(14,14,14,0.26);
+  line-height: 55px;
+  width: 100%;
+}
+#menu-outer {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 5%;
+}
+#menu-inner {
+  float: right;
+}
+#navbar-brand {
+  float: left;
+}
+slide-down {
+  top: 0;
+}
+slide-up {
+  top: 50;
+}

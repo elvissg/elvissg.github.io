@@ -1,0 +1,14 @@
+<meta charset="UTF-8">       
+<title>
+    <% if(page.title){ %>
+    <%= page.title + ' | ' + config.title %>
+    <% } else{ %>
+    <%= config.title %>
+    <% } %>
+</title>
+<% if (theme.stylesheets !== undefined && theme.stylesheets.length > 0) { %>
+    <!-- stylesheets list from config.yml -->
+    <% theme.stylesheets.forEach(function(url) { %>
+    <%- css(url) %>
+    <% }); %>
+<% } %>                      

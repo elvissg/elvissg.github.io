@@ -1,0 +1,19 @@
+
+# html lang
+language: zh-CN
+
+# main menu navigation
+menu:
+  主页: /
+  简历: /about
+
+# Miscelaneous
+favicon: /favicon.ico
+
+# stylesheets loaded in the <head>
+stylesheets:
+- /css/biu.css
+
+# scripts loaded in the end of the body
+scripts:
+- /js/biu.js
