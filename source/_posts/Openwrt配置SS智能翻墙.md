@@ -33,7 +33,7 @@ tags: Linux
         cache-size=1500
         min-cache-ttl=720
 
-新建dnsmasq.conf目录，生成dnsmasq_list.conf，[github上找的生成脚本](ttps://github.com/cokebar/gfwlist2dnsmasq/blob/master/gfwlist2dnsmasq.py)
+新建dnsmasq.conf目录，生成dnsmasq_list.conf，[github上找的生成脚本](https://github.com/cokebar/gfwlist2dnsmasq/blob/master/gfwlist2dnsmasq.py)
 格式看起是这样:
 
     dserver=/.github.com/127.0.0.1#5353　#使用UDP转发的方式解析该域名，实际查询的DNS是Google DNS。

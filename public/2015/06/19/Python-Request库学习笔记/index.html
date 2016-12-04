@@ -4,41 +4,44 @@
 <!-- head  -->
 <head>
     <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
 <title>
     
-    Python-Request库学习笔记 | Hexo
+    Python-Request库学习笔记 | Jelvis&#39;s Blog
     
 </title>
 
-    <!-- stylesheets list from config.yml -->
-    
-    <link rel="stylesheet" href="/css/biu.css">
-    
-                      
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>
 
 </head>
 <!-- /head -->
 
 <!-- body -->
 <body>
-    <!-- nav  -->
-    <nav id="navbar">
-        <div id="menu-outer">
-    <div id="navbar-brand">
-        <span id="brand-logo">Jelvis</span>
-    </div>
-    <div id="menu-inner">
-        <a href="/">主页</a>
-    </div>
-</div>
 
-    </nav>
-    <!-- /nav -->
+    
 
-    <!-- main section -->
-    <section>
-        
-<article id="post">
+
+    <!-- main -->
+    <div class="main">
+        <div class="post-wrap animated bounceInUp">
+<article class="post">
   <h1>Python-Request库学习笔记</h1>
   <ul>
 <li>基本Get请求：</li>
@@ -158,8 +161,7 @@ print(resp2.content)
 &gt;&gt;&gt; r = requests.delete(&quot;http://httpbin.org/delete&quot;)
 &gt;&gt;&gt; r = requests.head(&quot;http://httpbin.org/get&quot;)
 &gt;&gt;&gt; r = requests.options(&quot;http://httpbin.org/get&quot;)
-</code></pre><p>##遇到的问题:</p>
-<hr>
+</code></pre><h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题:"></a>遇到的问题:</h3><hr>
 <p>在cmd下执行，遇到个小错误:</p>
 <pre><code>UnicodeEncodeError:&apos;gbk&apos; codec can&apos;t encode character u&apos;\xbb&apos; in   
 position 23460: illegal multibyte sequence
@@ -169,7 +171,7 @@ position 23460: illegal multibyte sequence
 <p>2、用了什么编码</p>
 <pre><code>&apos;gbk&apos; codec can&apos;t encode character
 </code></pre><p>使用GBK编码出错</p>
-<p>##解决办法：<br>确定当前字符串，比如</p>
+<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><p>确定当前字符串，比如</p>
 <pre><code>#-*- coding:utf-8 -*-
 import requests
 url = &apos;http://www.baidu.com&apos;
@@ -182,43 +184,40 @@ print r.encoding
 <p>参考链接：<a href="http://www.python-requests.org/en/latest/" target="_blank" rel="external">官方文档</a>            </p>
 
 </article>
-
-
 <nav id="pagination">
   
-    <a href="/2015/06/20/LNMP安装/" class="prev">&larr; Prev</a>
+    <a href="/2015/06/20/LNMP安装/" class="prev">&larr; 上一页</a>
   
 
   
-
-  
-    <a href="/2015/05/19/gentoo安装/" class="next">Next &rarr;</a>
+    <a href="/2015/05/19/gentoo安装/" class="next">下一页 &rarr;</a>
   
 </nav>
 
+<div class="clear"></div>
+</div>
 
-    </section>
+<!-- back button -->
+  <a class="back-home" href="/" ><i class="fa fa-home fa-2x"></i></a>
+<!-- /back button -->
+
+
+    </div>
     <!-- /main -->
-
+    
+    
     <!-- footer -->
-    <footer>
-        <div id="bottom-outer">
-  <div id="bottom-inner">
-    Site by Jelvis using
-    <a href="http://hexo.io">hexo blog framework</a>.
-    <br>
-    <a href="/">Home</a>
-  </div>
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2016</p>
+    <p>Theme by <a href="https://github.com/elvissg">Jelvis</a></p>
 </div>
 
     </footer>
     <!-- /footer -->
 
-
-
-    <!-- scripts list from theme config.yml -->
     
 
-
+    
 </body>
 </html>

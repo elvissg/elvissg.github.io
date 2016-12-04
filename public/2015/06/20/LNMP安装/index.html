@@ -4,50 +4,53 @@
 <!-- head  -->
 <head>
     <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
 <title>
     
-    LNMP安装 | Hexo
+    LNMP安装 | Jelvis&#39;s Blog
     
 </title>
 
-    <!-- stylesheets list from config.yml -->
-    
-    <link rel="stylesheet" href="/css/biu.css">
-    
-                      
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>
 
 </head>
 <!-- /head -->
 
 <!-- body -->
 <body>
-    <!-- nav  -->
-    <nav id="navbar">
-        <div id="menu-outer">
-    <div id="navbar-brand">
-        <span id="brand-logo">Jelvis</span>
-    </div>
-    <div id="menu-inner">
-        <a href="/">主页</a>
-    </div>
-</div>
 
-    </nav>
-    <!-- /nav -->
+    
 
-    <!-- main section -->
-    <section>
-        
-<article id="post">
+
+    <!-- main -->
+    <div class="main">
+        <div class="post-wrap animated bounceInUp">
+<article class="post">
   <h1>LNMP安装</h1>
-  <p>#采用yum安装<br>Nginx</p>
+  <h2 id="采用yum安装"><a href="#采用yum安装" class="headerlink" title="采用yum安装"></a>采用yum安装</h2><p>Nginx</p>
 <pre><code>rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
 yum install -y nginxm
 </code></pre><p>Mysql</p>
 <pre><code>yum install -y mysql-devel mysql-server
 </code></pre><p>PHP</p>
 <pre><code>yum install -y php php-fpm
-</code></pre><p>#源码安装<br>下载pcre  （支持nginx伪静态）<br>ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/<br>编译安装</p>
+</code></pre><h2 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h2><p>下载pcre  （支持nginx伪静态）<br>ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/<br>编译安装</p>
 <ul>
 <li>Nginx</li>
 </ul>
@@ -103,43 +106,40 @@ port=3306
 <pre><code>./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-mysql=/usr/local/mysql --with-mysqli=/usr/local/bin/mysql_config --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-discard-path --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --with-curlwrappers --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-ldap --with-ldap-sasl --with-xmlrpc --enable-zip --enable-soap --without-pear --with-zlib --enable-pdo --with-pdo-mysql --with-mysql --with-fpm-systemd
 </code></pre>
 </article>
-
-
 <nav id="pagination">
   
-    <a href="/2015/06/29/CoreOS学习笔记/" class="prev">&larr; Prev</a>
+    <a href="/2015/06/29/CoreOS学习笔记/" class="prev">&larr; 上一页</a>
   
 
   
-
-  
-    <a href="/2015/06/19/Python-Request库学习笔记/" class="next">Next &rarr;</a>
+    <a href="/2015/06/19/Python-Request库学习笔记/" class="next">下一页 &rarr;</a>
   
 </nav>
 
+<div class="clear"></div>
+</div>
 
-    </section>
+<!-- back button -->
+  <a class="back-home" href="/" ><i class="fa fa-home fa-2x"></i></a>
+<!-- /back button -->
+
+
+    </div>
     <!-- /main -->
-
+    
+    
     <!-- footer -->
-    <footer>
-        <div id="bottom-outer">
-  <div id="bottom-inner">
-    Site by Jelvis using
-    <a href="http://hexo.io">hexo blog framework</a>.
-    <br>
-    <a href="/">Home</a>
-  </div>
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2016</p>
+    <p>Theme by <a href="https://github.com/elvissg">Jelvis</a></p>
 </div>
 
     </footer>
     <!-- /footer -->
 
-
-
-    <!-- scripts list from theme config.yml -->
     
 
-
+    
 </body>
 </html>

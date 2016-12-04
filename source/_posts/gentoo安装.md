@@ -2,10 +2,9 @@ title: gentoo安装
 date: 2015-05-19 13:48:08
 tags: Linux
 ---
-#概述
-Gentoo的安装笔记
 
-#过程
+> Gentoo的安装笔记
+
 
 用livecd引导：
 
@@ -228,20 +227,20 @@ systemd
 ---
 
 ebuild知识(转)
-0. 定位ebuild
-基础知识，比如
-$emerge -s gcal
-* app-misc/gcal
-Latest version available: 3.01
-Latest version installed: [ Not Installed ]
-Size of downloaded files: 2,315 kB
-Homepage: http://www.gnu.org/software/gcal/gcal.html
-Description: The GNU Calendar - a replacement for cal
+1. 定位ebuild
+    基础知识，比如
+    $emerge -s gcal
+    * app-misc/gcal
+    Latest version available: 3.01
+    Latest version installed: [ Not Installed ]
+    Size of downloaded files: 2,315 kB
+    Homepage: http://www.gnu.org/software/gcal/gcal.html
+    Description: The GNU Calendar - a replacement for cal
 
-那么gcal这个软件的ebuild就在/usr/portage/app-misc/gcal/下面
-在这个目录下，一般能看到很多ebuild文件，分别对应不同版本号
+    那么gcal这个软件的ebuild就在/usr/portage/app-misc/gcal/下面
+    在这个目录下，一般能看到很多ebuild文件，分别对应不同版本号
 
-1. 怎么继续前次的ebuild操作?
+2. 怎么继续前次的ebuild操作?
 比如，emerge到一半，发现一个错误，你google/去论坛搜了一圈，找出了解决办法，难道非要从头开始么? 解决办法其实很多了，说几个最常用的
 a. 使用ccache
 每个人都应该把它打开
@@ -252,7 +251,7 @@ FEATURES="ccache"
 默认好像是2G，我觉得如果硬盘空间足够，多多益善。
 下次emerge的时候，你会发现编译的速度快了很多。这样间接起到了中断继续的效果。个人推荐这个方法，最简单。
 
-b.继续make
+继续make
 emerge也就是一个用源码编译/安装的过程，而gnu make系统也保证了它实际上是可以"断点续传"的。而gentoo的portage系统在每次开始新的emerge的时候，会自己删掉以前的临时目录，重新生成，造成中断的emerge过程不可恢复。
 你只要进入到临时目录，一般是
 /var/tmp/portage/ebuild名称/work/ebuild名称/

@@ -1,11 +1,17 @@
 deploy:
   type: git
-  repository: https://github.com/elvissg/elvissg.github.io.git
+  repository: git@github.com:jelviss/jelviss.github.io.git
   branch: master
 #html lang
 language: zh-CN
 
 author: Jelvis
+description: 每天过的都一样,偶然会突发奇想
+keyword: 个人博客,Jelvis,Jelvis个人博客,浣永强
+
+title: Jelvis's Blog
+github: https://github.com/jelviss
+weibo: http://weibo.com/elvissg
 
 # main menu navigation
 menu:

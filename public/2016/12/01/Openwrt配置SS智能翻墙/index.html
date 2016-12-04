@@ -4,41 +4,44 @@
 <!-- head  -->
 <head>
     <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
 <title>
     
-    Openwrt配置SS智能翻墙笔记 | Hexo
+    Openwrt配置SS智能翻墙笔记 | Jelvis&#39;s Blog
     
 </title>
 
-    <!-- stylesheets list from config.yml -->
-    
-    <link rel="stylesheet" href="/css/biu.css">
-    
-                      
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>
 
 </head>
 <!-- /head -->
 
 <!-- body -->
 <body>
-    <!-- nav  -->
-    <nav id="navbar">
-        <div id="menu-outer">
-    <div id="navbar-brand">
-        <span id="brand-logo">Jelvis</span>
-    </div>
-    <div id="menu-inner">
-        <a href="/">主页</a>
-    </div>
-</div>
 
-    </nav>
-    <!-- /nav -->
+    
 
-    <!-- main section -->
-    <section>
-        
-<article id="post">
+
+    <!-- main -->
+    <div class="main">
+        <div class="post-wrap animated bounceInUp">
+<article class="post">
   <h1>Openwrt配置SS智能翻墙笔记</h1>
   <p>需要安装的软件包：</p>
 <ul>
@@ -61,7 +64,7 @@
 <pre><code>conf-dir=/etc/dnsmasq.d
 cache-size=1500
 min-cache-ttl=720
-</code></pre><p>新建dnsmasq.conf目录，生成dnsmasq_list.conf，<a href="ttps://github.com/cokebar/gfwlist2dnsmasq/blob/master/gfwlist2dnsmasq.py" target="_blank" rel="external">github上找的生成脚本</a><br>格式看起是这样:</p>
+</code></pre><p>新建dnsmasq.conf目录，生成dnsmasq_list.conf，<a href="https://github.com/cokebar/gfwlist2dnsmasq/blob/master/gfwlist2dnsmasq.py" target="_blank" rel="external">github上找的生成脚本</a><br>格式看起是这样:</p>
 <pre><code>dserver=/.github.com/127.0.0.1#5353　#使用UDP转发的方式解析该域名，实际查询的DNS是Google DNS。
 ipset=/.github.com/gfwlist　　#将解析出来的IP保存到名为gfwlist的ipset表中。
 </code></pre><p>在网络-防火墙-自定义规则添加</p>
@@ -72,41 +75,38 @@ iptables -t nat -A OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to
 <p>重启路由，试试访问baidu.com和httpbin.org/ip，后者显示的应该是代理服务器ip。</p>
 
 </article>
-
-
 <nav id="pagination">
   
 
   
-
-  
-    <a href="/2015/06/29/CoreOS学习笔记/" class="next">Next &rarr;</a>
+    <a href="/2015/06/29/CoreOS学习笔记/" class="next">下一页 &rarr;</a>
   
 </nav>
 
+<div class="clear"></div>
+</div>
 
-    </section>
+<!-- back button -->
+  <a class="back-home" href="/" ><i class="fa fa-home fa-2x"></i></a>
+<!-- /back button -->
+
+
+    </div>
     <!-- /main -->
-
+    
+    
     <!-- footer -->
-    <footer>
-        <div id="bottom-outer">
-  <div id="bottom-inner">
-    Site by Jelvis using
-    <a href="http://hexo.io">hexo blog framework</a>.
-    <br>
-    <a href="/">Home</a>
-  </div>
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2016</p>
+    <p>Theme by <a href="https://github.com/elvissg">Jelvis</a></p>
 </div>
 
     </footer>
     <!-- /footer -->
 
-
-
-    <!-- scripts list from theme config.yml -->
     
 
-
+    
 </body>
 </html>

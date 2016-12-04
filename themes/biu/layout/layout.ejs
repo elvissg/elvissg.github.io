@@ -9,29 +9,34 @@
 
 <!-- body -->
 <body>
-    <!-- nav  -->
-    <nav id="navbar">
-        <%- partial('_partials/nav') %>
-    </nav>
-    <!-- /nav -->
 
-    <!-- main section -->
-    <section>
+    <% if(is_home()) {%>
+    <!-- header -->
+    <header class="header">
+      <%-partial('_partials/header')%>
+    </header>
+    <!-- /header -->
+    <% } %>
+
+
+    <!-- main -->
+    <div class="main">
         <%- body %>
-    </section>
+    </div>
     <!-- /main -->
-
+    
+    
     <!-- footer -->
-    <footer>
+    <footer class="bottom animated fadeInUp">
         <%- partial('_partials/footer') %>
     </footer>
     <!-- /footer -->
 
+    
 
-<% if (theme.scripts !== undefined && theme.scripts.length > 0) { %>
-    <!-- scripts list from theme config.yml -->
-    <% theme.scripts.forEach(function(url) { js(url) }); %>
-<% } %>
-
+    <% if(is_home()){ %>
+      <%- js("/js/jquery-3.1.1.slim.min.js") %>
+      <%- js("/js/biu.js") %>
+    <% } %>
 </body>
 </html>

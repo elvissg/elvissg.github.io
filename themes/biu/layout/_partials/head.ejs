@@ -1,4 +1,10 @@
 <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="<%=config.author%>">
+<meta name="keywords" content="<%=config.keyword%>"/>
+<meta name="description" content="<%=config.author%>的博客">
 <title>
     <% if(page.title){ %>
     <%= page.title + ' | ' + config.title %>
@@ -6,9 +12,16 @@
     <%= config.title %>
     <% } %>
 </title>
-<% if (theme.stylesheets !== undefined && theme.stylesheets.length > 0) { %>
-    <!-- stylesheets list from config.yml -->
-    <% theme.stylesheets.forEach(function(url) { %>
-    <%- css(url) %>
-    <% }); %>
-<% } %>                      
+
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<%- css('/css/markdown.css') %>
+<%- css('/css/animate.css') %>
+<%- css('/css/font-awesome.min.css') %>
+<%- css('/css/styles.css') %>
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>

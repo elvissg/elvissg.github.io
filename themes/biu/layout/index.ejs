@@ -1,3 +1,7 @@
-
-<%-partial('_partials/recent-posts')%>
-<%-partial('_partials/pagination')%>
+<!-- home-wrap -->
+<div class="container home-wrap">
+<article class="article-list">
+<%-partial('_partials/recent-posts', {pagination: 2, index: true})%>
+</article>
+<!-- /home-wrap -->
+</div>

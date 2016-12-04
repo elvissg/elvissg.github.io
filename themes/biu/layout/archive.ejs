@@ -1,4 +1,3 @@
-
 <%
 var categoriesList = list_categories({ show_count: false }),
   tagsList = list_tags({ show_count: false }),
@@ -8,7 +7,7 @@ var categoriesList = list_categories({ show_count: false }),
 <% if (!is_year()) { %>
   <div id="archive">
 
-    <h1>Archives</h1>
+    <h1><%- _p('Archive') %></h1>
 
     <% if (theme.atom) { %>
       <p>
@@ -19,7 +18,7 @@ var categoriesList = list_categories({ show_count: false }),
     <% } %>
 
     <aside>
-      <h2>Categories</h2>
+      <h2><%- _p('categories') %></h2>
       <% if (categoriesList) { %>
         <%-categoriesList%>
       <% } else { %>
@@ -29,7 +28,7 @@ var categoriesList = list_categories({ show_count: false }),
     <br>
 
     <aside>
-      <h2>Tags</h2>
+      <h2><%- _p('tags') %></h2>
       <% if (tagsList) { %>
         <%-tagsList%>
       <% } else { %>
@@ -39,7 +38,7 @@ var categoriesList = list_categories({ show_count: false }),
     <br>
 
     <aside>
-      <h2>Archives</h2>
+      <h2><%- _p('Archives') %></h2>
       <% if (archivesList) { %>
         <%-archivesList%>
       <% } else { %>

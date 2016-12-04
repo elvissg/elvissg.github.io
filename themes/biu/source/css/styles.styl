@@ -1,0 +1,197 @@
+*
+  margin: 0
+  padding: 0
+
+body
+  font-size: 16px
+  font-family: -apple-system,"Helvetica Neue",Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif
+  overflow-x: hidden
+
+html,body
+  height: 100%
+
+a
+  text-decoration: none
+  color: #555
+
+.container
+  max-width: 1280px
+  padding: 0 15px 0 15px
+  margin: auto
+
+/*
+* Header
+*/
+.header 
+  height: 100%
+
+.header-pc-wrap
+  color: #555
+  margin: auto
+  text-align: center
+  height: 100%
+  background: url('/img/sanji.png') no-repeat
+  background-size: cover
+  background-attachment: fixed
+  background-position: 0 0
+  background-color: #fff
+  animation: animateBg 1s linear
+  perspective: 800px
+
+
+@keyframes animateBg
+  from 
+      background-position: 0 100%
+  to
+      background-position: 0 0
+
+.header-pc
+  transform-style: preserve-3d
+  margin: auto
+  padding-top: 15%
+  width: 40%
+  height: 100%
+
+
+.avater-pc
+  border-radius: 50%
+  box-shadow:0px 0px 10px #000
+  margin-bottom: 20px
+  width: 100px
+  transition: transform 0.1s ease-out
+
+
+.avater-pc:hover
+  transform: rotateZ(5deg)
+  
+
+.description
+  margin-top: 10px
+  margin-bottom: 15px
+  font-size: 14px
+  color: #bfbfbf
+  
+.info-pc
+  backface-visibility: hidden
+  transform: translate3d(0, 0, 0)
+  
+  h2
+      font-size: 130%
+      border: none
+      margin-top: 0
+      padding-top: 0
+      color: #808080
+      margin-bottom: 21px
+
+.contact
+  margin-top: 10px
+
+.header-mobile-wrap
+  display: none
+
+
+/*
+ * Main
+ */
+.main
+  min-height: 768px
+  position: relative
+  box-shadow: 0 1px 10px #fff
+
+.home-wrap
+  position: relative
+  width: 100%
+  min-height: 300px
+  overflow: hidden
+
+.article-list
+  margin: auto
+  width: 960px
+  overflow: hidden
+  animation-delay: 0.15s
+
+.article-footer
+  font-size: 0.85em
+  line-height: 1.6em
+  border-top: 1px solid #ddd
+  padding-top: 1.6em
+
+  ul
+    list-style: none;
+
+  a
+    color: #999
+
+.article
+  padding: 10px
+  box-shadow: 1px 2px 3px #ddd;
+  margin: 10px
+
+.article-tag-list-link:before
+  content: "#";
+
+
+/*
+* Footer
+*/
+.bottom
+  position: relative
+  width: 100%
+  padding: 60px 0 20px 0
+  background: #262a30
+  color: #fff
+  
+  a
+    color: #fff
+
+.copyright
+  text-align: center
+
+#pagination
+  margin: 10px 0
+  float: right
+  padding-right: 20%
+
+
+/*
+* Post Page
+*/
+.post
+  padding: 2% 5% 5% 5%
+  width: 50%
+  height: 50%
+  line-height: 1.7
+  margin: 0 19% 0 20%
+  background-color: rgba(255,255,255,0.3)
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset
+  position: relative
+  zoom: 1
+
+@media screen and (max-width:1080px)
+  .post
+      width: 89%
+      margin: 0
+
+.back-home
+  display: block
+  position: fixed
+  bottom: 0
+  right: 5%
+  z-index: 999
+
+/*
+* Tag Page
+*/
+@media screen and (min-width: 914px)
+  .tag-wrap
+      width: 854px
+      margin: 0 auto
+
+@media screen and (min-width: 500px)
+  .tag-wrap
+      margin: 30px auto
+      width: 500px
+
+.tag-item
+  margin-bottom: 10px    
+  font-size: 20px

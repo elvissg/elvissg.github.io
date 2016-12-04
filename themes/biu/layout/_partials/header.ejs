@@ -1,0 +1,40 @@
+<div class="header-pc-wrap animated fadeInUp">
+  <div class="header-pc">
+    <div class="info-pc">
+      <img  class="avater-pc" src="/img/jelvis.gif">
+      <h2><%=config.author%></h2>
+      <div class="description">
+        <%=config.description%>
+      </div>
+      <div class="tags">
+        <%- tagcloud() %>
+      </div>
+      <div class="contact">
+        <% if(config.github) {%>
+          <a href="<%= config.github %>"> <i class="fa fa-github" aria-hidden="true"></i></a>
+        <% } %>
+        <% if(config.weibo) {%>
+          <a href="<%= config.weibo %>"> <i class="fa fa-weibo" aria-hidden="true"></i></a>
+        <% } %>
+      </div>
+      <div class="friend">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header-mobile-wrap animated fadeInDown">
+  <div class="header-mobile">
+    <img src="/img/jelvis.gif">
+    <p class="mobile-author"><%- config.author %></p>
+    <p><%- config.description %></p>
+    <div class="mobile-contact">
+      <% if(config.github) {%>
+        <a href="<%= config.github %>"> <i class="fa fa-github" aria-hidden="true"></i></a>
+      <% } %>
+      <% if(config.weibo) {%>
+        <a href="<%= config.weibo %>"> <i class="fa fa-weibo" aria-hidden="true"></i></a>
+      <% } %>
+    </div>
+  </div>
+</div>
+

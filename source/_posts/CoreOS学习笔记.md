@@ -37,7 +37,7 @@ coreos-cloudinit -from-file=cloud-config.yaml
 
         vagrant ssh core-01 -- -A
 
-###登陆后可以用fleet进行集群管理：      
+### 登陆后可以用fleet进行集群管理：      
 用`fleetctl list_machines`查看。
 
 (加上`-- -A`参数可以把密钥带入登陆的虚拟机，以便fleet直接从一个节点ssh到另一个节点,命令:`fleetctl ssh id`)
@@ -57,7 +57,7 @@ coreos-cloudinit -from-file=cloud-config.yaml
 
 ---
 
-###有时候这样配置以后不能自动Discovery服务器,需要手动添加:
+### 有时候这样配置以后不能自动Discovery服务器,需要手动添加:
 
         etcd -name="core-01" -addr="172.16.8.101:4001" -peer-addr="172.16.8.101:7001" -peers="172.16.8.102:7001,172.16.8.103:7001" -data-dir="/home/core/etcd"  
         

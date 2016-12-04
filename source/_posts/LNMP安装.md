@@ -3,7 +3,9 @@ date: 2015-06-20 15:30:26
 tags: Linux
 ---
 
-#采用yum安装
+## 采用yum安装
+
+
 Nginx
 
     rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
@@ -17,7 +19,7 @@ PHP
 
     yum install -y php php-fpm
     
-#源码安装
+## 源码安装
 下载pcre  （支持nginx伪静态）
 ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
 编译安装
