@@ -4,6 +4,7 @@ date: 2016-12-01 14:38:28
 tags: Linux
 ---
 
+路由器：XiaoMi
 需要安装的软件包：
 
 - shadowsocks-libev
@@ -13,11 +14,11 @@ tags: Linux
 - dnsmasq-full(把自带的dnsmasql卸了装这个，支持min-cache-ttl)
 
 
-1、先设置ss，因为安装了luci-app-shadowsocks，直接进后台填写ss服务器信息，勾选透明代理，端口1080，代理协议TCP+UDP。保存并应用ss-redir就跑起来了。
+1、先设置ss，因为安装了luci-app-shadowsocks，直接进后台，后面两步也是在web后台操作，填写ss服务器信息，勾选透明代理，端口1080，代理协议TCP+UDP。保存并应用ss-redir就跑起来了。
 
 2、设置chinadns，勾选“启动”、“启动双向过滤”、“启动DNS压缩指针”，本地端口5353，上游服务器114.114.114.114,8.8.8.8:53(ps:一定要填两个，不然启动不起来，国内走114，国外走8888)
 
-3、转到网络-DHCP/DNS，设置DNS转发127.0.0.1#5353(就是刚才chinadns的端口),在host和解析文件选项卡中勾选*忽略解析文件*和*忽略/etc/hosts*。
+3、打开选项卡(网络-DHCP/DNS)，设置DNS转发127.0.0.1#5353(就是刚才chinadns的端口),在host和解析文件选项卡中勾选*忽略解析文件*和*忽略/etc/hosts*。
 
 4、接下来我试了两种办法智能翻
 

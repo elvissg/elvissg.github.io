@@ -19,22 +19,22 @@ tags: Javascript
 	
 	} );
 
-- jquery遵循AMD，使用了requirejs库
+- jquery-1.12-stable遵循AMD，使用了requirejs库
 - define()包含所有依赖的模块
 - 最后将jQuery对象暴露到全局，并取了个别名叫$。
 
 ---
-**一个一个看，从core.js开始 **
+**core.js **
 core.js先定义了jQuery对象
 
     var jQuery = function( selector, context ) {
 
         // The jQuery object is actually just the init constructor 'enhanced'
         // Need init if jQuery is called (just allow error to be thrown if not included)
-        return new jQuery.fn.init( selector, context );
+													        return new jQuery.fn.init( selector, context );
     }
 
-我们平时用的比如$("div")实际上是jQuery("div")即**new  jQuery.fn.init("div")**。
+我们平时用的比如$("div")，实际上是jQuery("div")即**new  jQuery.fn.init("div")**。
 jQuery.fn.init定义在src/core/init.js中，源码如下：
 
 
@@ -107,7 +107,13 @@ jQuery.fn.init定义在src/core/init.js中，源码如下：
 		return jQuery.makeArray( selector, this );
 	};
 
-可以看到 jQuery.fn.init函数处理各种传入$()里的参数。如$()，$(document.body)，$("body")，$("<div>xx</div>")，$(function(){})，$(#id)，$("div p")等，其余复杂的交给sizzle处理。
+可以看到 jQuery.fn.init函数处理各种传入$()里的参数。分一下6种情况：
+1. ""、null、undefined、false
+2. DOM元素
+3. 字符串：HTML标签、HTML字符串、#id、选择器表达式
+4. 函数（作为ready回调函数）
+5. jQuery对象（因为有selector值）
+6. 其它(sizzle)
 
 ---
 下面定义jQuery原型
@@ -135,26 +141,76 @@ jQuery.fn.init定义在src/core/init.js中，源码如下：
 	//a.rototype.constructor === Object is true
 	//a.prototype.constructor === Object is true
 	
-于是通过将constructor显式的指向jQuery解决这个问题
+于是通过将constructor显式的指向jQuery解决这个问题	
 
 ---
-之后定义了*extend*方法(这个方法平时见的比较多，写jquery插件都要用上)
+之后定义了*extend*方法(这个方法平时见的比较多，写jquery插件都要用上)：
 
-    //extend的作用是将诺干个对象合并
-    jQuery.extend = jQuery.fn.extend = function(){
-       ...    
-       //这里两个对象虽然指向了同一个函数，但它们的作用有所不同(this的功劳)
-       //jQuery.extend用于对jQuery本身的属性和方法进行扩展
-       //jQuery.fn.extend用于对jQuery.fn的属性和方法进行扩展 
-       if ( i === length ) {
-       //i === length表示只传入一个参数的情况(扩展this指向的对象本身，即jQuery或jQuery.fn)
-			target = this;
-			i--;
+	jQuery.extend = jQuery.fn.extend = function() {
+        //extend的作用是复制数组，通过第一个参数控制深复制(true)和浅复制
+	  var src, copyIsArray, copy, name, options, clone,
+	  target = arguments[0] || {},
+	  i = 1,
+	  length = arguments.length,
+	  deep = false;
+	
+	// 深拷贝
+	if ( typeof target === "boolean" ) {
+	  deep = target;
+	
+	// 跳过boolean值
+	target = arguments[ i ] || {};
+	i++;
+	}
+	
+	
+	if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+	  target = {};
+	}
+	
+	// 只有一个参数时，表示扩展jQeury对象本身
+	if ( i === length ) {
+	  target = this;
+	  i--;
+	}
+	
+	for ( ; i < length; i++ ) {
+	// 跳过null参数
+	if ( (options = arguments[ i ]) != null ) {
+	  // 扩展对象
+	  for ( name in options ) {
+	    src = target[ name ];
+	    copy = options[ name ];
+	
+	    // 防止死循环
+	    if ( target === copy ) {
+	      continue;
 	    }
-		...//如果参数不止一个，则将后面的对象合并到第一个
-		return target
-	} 
-
+	
+	    // 递归复制
+	    if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+	      if ( copyIsArray ) {
+	        copyIsArray = false;
+	        clone = src && jQuery.isArray(src) ? src : [];
+	
+	      } else {
+	        clone = src && jQuery.isPlainObject(src) ? src : {};
+	      }
+	
+	      // Never move original objects, clone them
+	      target[ name ] = jQuery.extend( deep, clone, copy );
+	
+	    // Don't bring in undefined values
+	  } else if ( copy !== undefined ) {
+	    target[ name ] = copy;
+	  }
+	}
+	}
+	}
+	
+	// Return the modified object
+	return target;
+	};
 之后core.js通过jQuery.extend扩展了一些静态方法
 
 

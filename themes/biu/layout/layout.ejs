@@ -32,11 +32,18 @@
     </footer>
     <!-- /footer -->
 
-    
-
-    <% if(is_home()){ %>
-      <%- js("/js/jquery-3.1.1.slim.min.js") %>
-      <%- js("/js/biu.js") %>
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      <% if(is_post()) {%>
+      <a class="back-home" href="/"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
     <% } %>
+</div>
+
+    <!-- /back-top -->
+
+    
+    <%- js("/js/iQuery.js") %>
+    <%- js("/js/biu.js") %>
 </body>
 </html>

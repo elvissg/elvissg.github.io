@@ -142,8 +142,8 @@ a {
   padding-right: 20%;
 }
 /*
-* Post Page
-*/
+ * Post Page
+ */
 .post {
   padding: 2% 5% 5% 5%;
   width: 50%;
@@ -155,22 +155,9 @@ a {
   position: relative;
   zoom: 1;
 }
-@media screen and (max-width: 1080px) {
-  .post {
-    width: 89%;
-    margin: 0;
-  }
-}
-.back-home {
-  display: block;
-  position: fixed;
-  bottom: 0;
-  right: 5%;
-  z-index: 999;
-}
 /*
-* Tag Page
-*/
+ * Tag Page
+ */
 @media screen and (min-width: 914px) {
   .tag-wrap {
     width: 854px;
@@ -186,6 +173,17 @@ a {
 .tag-item {
   margin-bottom: 10px;
   font-size: 20px;
+}
+.back {
+  display: block;
+  position: fixed;
+  bottom: 10px;
+  right: 3%;
+  z-index: 999;
+}
+.back-top {
+  margin-right: 10px;
+  visibility: hidden;
 }
 @-moz-keyframes animateBg {
   from {

@@ -14,8 +14,10 @@ tags: Linux
 将stage3解压到/mnt/gentoo,将protage解压到/mnt/gentoo/usr/
 
 
-    mount --rbind /dev /mnt/gentoo/dev
-    mount -t proc proc /mnbt/gentoo/proc
+    mount --bind /dev /mnt/gentoo/dev
+    --bind命令我的理解是：将/mnt/gentoo/dev目录的内容暂时用/dev里的内容代替
+
+    mount -t proc proc /mnt/gentoo/proc
     chroot /mnt/gentoo /bin/bash
     env-update && source /etc/profile
 
@@ -29,7 +31,7 @@ tags: Linux
     sync-uri = rsync://rsync.gentoo.org/gentoo-portage
     auto-sync = yes
 
-    emerge --sync更新portage
+    emerge --sync #更新portage
     passwd #记得改密码
     
     emerge -av grub2
@@ -39,7 +41,7 @@ tags: Linux
     emerge -c gcc
 
 
-注解 /etc/conf.d/local.start 里面全部东西，或用下面的指令清空
+注释 /etc/conf.d/local.start 里面全部东西，或用下面的指令清空
 
     cat /dev/null > /etc/conf.d/local.start
     rc-update del autoconfig
@@ -69,6 +71,7 @@ tags: Linux
     其他注释掉
     ctrl_interface=/var/run/wpa_supplicant
     wpa_supplicant -Dwext -i wlan0 -c //etc/wap_supplicant    
+
 wext 是驱动名字，大部分是这个
 这时候就可以连接cli了
 wpa_cli -i wlan0
@@ -212,7 +215,6 @@ systemd
 
     /etc/default/grub
 
-
     GRUB_CMDLINE_LINUX="init=/usr/lib/systemd/systemd"
     use加上systemd
 
@@ -297,5 +299,3 @@ locale把按照所涉及到的文化传统的各个方面分成12个大类，这
 10、度量衡表达方式 (LC_MEASUREMENT) 
 11、默认纸张尺寸大小(LC_PAPER) 
 12、对locale自身包含信息的概述(LC_IDENTIFICATION)。
-
-

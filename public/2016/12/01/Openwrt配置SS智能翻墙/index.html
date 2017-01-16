@@ -27,7 +27,7 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 <link rel="stylesheet" href="/css/animate.css">
 <link rel="stylesheet" href="/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/styles.css">
-<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:1080px)"/>
 
 </head>
 <!-- /head -->
@@ -43,7 +43,7 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
         <div class="post-wrap animated bounceInUp">
 <article class="post">
   <h1>Openwrt配置SS智能翻墙笔记</h1>
-  <p>需要安装的软件包：</p>
+  <p>路由器：XiaoMi<br>需要安装的软件包：</p>
 <ul>
 <li>shadowsocks-libev</li>
 <li>chinadns</li>
@@ -51,9 +51,9 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 <li>luci-app-chinadns</li>
 <li>dnsmasq-full(把自带的dnsmasql卸了装这个，支持min-cache-ttl)</li>
 </ul>
-<p>1、先设置ss，因为安装了luci-app-shadowsocks，直接进后台填写ss服务器信息，勾选透明代理，端口1080，代理协议TCP+UDP。保存并应用ss-redir就跑起来了。</p>
+<p>1、先设置ss，因为安装了luci-app-shadowsocks，直接进后台，后面两步也是在web后台操作，填写ss服务器信息，勾选透明代理，端口1080，代理协议TCP+UDP。保存并应用ss-redir就跑起来了。</p>
 <p>2、设置chinadns，勾选“启动”、“启动双向过滤”、“启动DNS压缩指针”，本地端口5353，上游服务器114.114.114.114,8.8.8.8:53(ps:一定要填两个，不然启动不起来，国内走114，国外走8888)</p>
-<p>3、转到网络-DHCP/DNS，设置DNS转发127.0.0.1#5353(就是刚才chinadns的端口),在host和解析文件选项卡中勾选<em>忽略解析文件</em>和<em>忽略/etc/hosts</em>。</p>
+<p>3、打开选项卡(网络-DHCP/DNS)，设置DNS转发127.0.0.1#5353(就是刚才chinadns的端口),在host和解析文件选项卡中勾选<em>忽略解析文件</em>和<em>忽略/etc/hosts</em>。</p>
 <p>4、接下来我试了两种办法智能翻</p>
 <ul>
 <li><p>一种是白名单方式，从apnic爬取国内ip段(<a href="https://github.com/elvissg/config/blob/master/gen_Asiaip.sh" target="_blank" rel="external">爬取脚本</a>)，利用iptables将国内ip直接通过，其余全部走ss代理。<br>结果爬下来有7000多条，每次重启添加到iptables都要添加个好几分钟，mdzz。</p>
@@ -77,6 +77,8 @@ iptables -t nat -A OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to
 </article>
 <nav id="pagination">
   
+    <a href="/2017/01/16/jQuery源码学习笔记一/" class="prev">&larr; 上一页</a>
+  
 
   
     <a href="/2015/06/29/CoreOS学习笔记/" class="next">下一页 &rarr;</a>
@@ -85,10 +87,6 @@ iptables -t nat -A OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to
 
 <div class="clear"></div>
 </div>
-
-<!-- back button -->
-  <a class="back-home" href="/" ><i class="fa fa-home fa-2x"></i></a>
-<!-- /back button -->
 
 
     </div>
@@ -105,8 +103,18 @@ iptables -t nat -A OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to
     </footer>
     <!-- /footer -->
 
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      
+      <a class="back-home" href="/"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
     
+</div>
+
+    <!-- /back-top -->
 
     
+    <script src="/js/iQuery.js"></script>
+    <script src="/js/biu.js"></script>
 </body>
 </html>

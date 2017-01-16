@@ -75,7 +75,7 @@ coreos-cloudinit -from-file=cloud-config.yaml
     X-Conflicts=hello*.service
     X-Conflicts 指定了这个 Hello 服务不能运行在“任意已经分配了任何名字以hello开头的服务”的节点上
     
-由于Fleet需要在集群层面上对服务进行管理，因此它的服务管理流程与Systemd略有不同。最明显的两个区别是：Fleet没有指定Unit文件必须放置在哪些目录下，而是直接通过参数的方式告诉fleetctl命令。使用上面的内容在用户的主目录下创建hello.service文件，然后来通过fleetctl start启动这个服务。
+  由于Fleet需要在集群层面上对服务进行管理，因此它的服务管理流程与Systemd略有不同。最明显的两个区别是：Fleet没有指定Unit文件必须放置在哪些目录下，而是直接通过参数的方式告诉fleetctl命令。使用上面的内容在用户的主目录下创建hello.service文件，然后来通过fleetctl start启动这个服务。
 
 现在建立一个hello.service:
 
@@ -103,14 +103,15 @@ coreos-cloudinit -from-file=cloud-config.yaml
     hello.service 0acdd9bf.../10.0.2.15 active running
     
 ---
- 服务的提交阶段，这个步骤仅仅是在Fleet服务中完成的，目的是将指定的Unit文件添加到Fleet的记录缓存。此时Fleet并不会与Systemd进行通信。通过 fleetctl list-unit-files 和 fleetctl list-units 命令可以看到，Unit文件被提交后，并没有出现在后者的记录中。此时这个Unit文件已经被注册为一个Fleet可识别的Unit名称，但还不是一个可以执行的的服务。
+服务的提交阶段，这个步骤仅仅是在Fleet服务中完成的，目的是将指定的Unit文件添加到Fleet的记录缓存。此时Fleet并不会与Systemd进行通信。通过 fleetctl list-unit-files 和 fleetctl list-units 命令可以看到，Unit文件被提交后，并没有出现在后者的记录中。此时这个Unit文件已经被注册为一个Fleet可识别的Unit名称，但还不是一个可以执行的的服务。
  
     $ fleetctl submit ${HOME}/hello.service
     $ fleetctl list-unit-files
     UNIT HASH DSTATE STATE TARGET
     hello.service 4bff33d inactive inactive -
-$ fleetctl list-units
+    $ fleetctl list-units
     UNIT MACHINE ACTIVE SUB
+
  其他命令:
  
     $ fleetctl cat hello.service #查看
@@ -130,21 +131,6 @@ $ fleetctl list-units
     $ fleetctl destroy hello.service #销毁
     $ fleetctl ssh hello # 跳转到运行Hello服务的节点
  
- ---
-
-Kubernetes:
-
-
-概念:
-
-- CoreOS是一个基于Docker(or rocket)的轻量级容器化Linux发行版，为了计算机集群的基础设施建设而生，专注于自动化，轻松部署，安全，可靠，规模化。
-- etcd 与 fleet的使用
-    - etcd 是一个分布式 key/value 存储服务
-    - [fleet](https://github.com/coreos/fleet) 是一个通过 Systemd对CoreOS 集群中进行控制和管理的工具
-    - Kubernetes负责容器的管理
-    - flannel (rudder)flannel (rudder) 是 CoreOS 团队针对 Kubernetes 设计的一个覆盖网络 (overlay network) 工具，其目的在于帮助每一个使用 Kuberentes 的 CoreOS 主机拥有一个完整的子网。Kubernetes 会为每一个 POD 分配一个独立的 IP 地址，这样便于同一个 POD 中的 Containers 彼此连接，而之前的 CoreOS 并不具备这种能力。为了解决这一问题，flannel 通过在集群中创建一个覆盖网格网络 (overlay mesh network) 为主机设定一个子网。
-    
-
 *http://www.infoq.com/cn/articles/what-is-coreos*
 *http://www.infoq.com/cn/articles/coreos-analyse-etcd*
 

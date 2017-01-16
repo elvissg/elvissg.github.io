@@ -27,7 +27,7 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 <link rel="stylesheet" href="/css/animate.css">
 <link rel="stylesheet" href="/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/styles.css">
-<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:960px)"/>
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:1080px)"/>
 
 </head>
 <!-- /head -->
@@ -49,8 +49,10 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 <p>用livecd引导：</p>
 <pre><code>mount /dev/sdax /mnt/gentoo
 </code></pre><p>将stage3解压到/mnt/gentoo,将protage解压到/mnt/gentoo/usr/</p>
-<pre><code>mount --rbind /dev /mnt/gentoo/dev
-mount -t proc proc /mnbt/gentoo/proc
+<pre><code>mount --bind /dev /mnt/gentoo/dev
+--bind命令我的理解是：将/mnt/gentoo/dev目录的内容暂时用/dev里的内容代替
+
+mount -t proc proc /mnt/gentoo/proc
 chroot /mnt/gentoo /bin/bash
 env-update &amp;&amp; source /etc/profile
 </code></pre><p>配置/etc/portage/make.conf换源(最新版本的是配置/etc/portage/repos.conf/*，<a href="https://wiki.gentoo.org/wiki/Project:Portage/Sync" target="_blank" rel="external">官方wiki-Sync</a>)</p>
@@ -62,7 +64,7 @@ sync-type = rsync#同时还支持git
 sync-uri = rsync://rsync.gentoo.org/gentoo-portage
 auto-sync = yes
 
-emerge --sync更新portage
+emerge --sync #更新portage
 passwd #记得改密码
 
 emerge -av grub2
@@ -70,7 +72,7 @@ grub: /boot/grub/grub.cfg
 emerge -av gcc
 gcc-config 2
 emerge -c gcc
-</code></pre><p>注解 /etc/conf.d/local.start 里面全部东西，或用下面的指令清空</p>
+</code></pre><p>注释 /etc/conf.d/local.start 里面全部东西，或用下面的指令清空</p>
 <pre><code>cat /dev/null &gt; /etc/conf.d/local.start
 rc-update del autoconfig
 </code></pre><p>设定时区</p>
@@ -166,7 +168,6 @@ vgchange -ay  //激活系统所有卷组vg
 <p><a href="http://wiki.gentoo.org/wiki/Systemd" target="_blank" rel="external">参照官方wiki</a></p>
 <pre><code>/etc/default/grub
 
-
 GRUB_CMDLINE_LINUX=&quot;init=/usr/lib/systemd/systemd&quot;
 use加上systemd
 
@@ -230,10 +231,6 @@ LC_ALL=en_US.UTF-8
 <div class="clear"></div>
 </div>
 
-<!-- back button -->
-  <a class="back-home" href="/" ><i class="fa fa-home fa-2x"></i></a>
-<!-- /back button -->
-
 
     </div>
     <!-- /main -->
@@ -249,8 +246,18 @@ LC_ALL=en_US.UTF-8
     </footer>
     <!-- /footer -->
 
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      
+      <a class="back-home" href="/"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
     
+</div>
+
+    <!-- /back-top -->
 
     
+    <script src="/js/iQuery.js"></script>
+    <script src="/js/biu.js"></script>
 </body>
 </html>
