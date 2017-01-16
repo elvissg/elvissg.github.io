@@ -1,0 +1,30 @@
+language: node_js
+node_js: stable
+
+# S: Build Lifecycle
+install:
+  - npm install
+
+
+#before_script:
+ # - npm install -g gulp
+
+script:
+  - hexo g
+
+after_script:
+  - cd ./public
+  - git init
+  - git config user.name "jelvis"
+  - git config user.email "jelvis2016@gmail.com"
+  - git add .
+  - git commit -m "bak"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master
+# E: Build LifeCycle
+
+branches:
+  only:
+    - bak
+env:
+ global:
+   - GH_REF: github.com/jelviss/jelviss.github.io
