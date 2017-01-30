@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- head  -->
+<head>
+    <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
+<title>
+    
+    jQuery源码学习笔记一 | Jelvis&#39;s Blog
+    
+</title>
+
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:1080px)"/>
+
+</head>
+<!-- /head -->
+
+<!-- body -->
+<body>
+
+    
+
+
+    <!-- main -->
+    <div class="main">
+        <div class="post-wrap animated bounceInUp">
+<article class="post">
+  <h1>jQuery源码学习笔记一</h1>
+  <blockquote>
+<p>版本是<a href="https://github.com/jquery/jquery/blob/1.12-stable" target="_blank" rel="external">1.12-stable</a><br>jquery-1.12-stable遵循AMD，使用了requirejs库，模块分的很清楚，比较好读</p>
+</blockquote>
+<p><strong>入口:src/jquery.js</strong><br>源码:</p>
+<pre><code>define( [
+    &quot;./core&quot;,
+    &quot;./selector&quot;,
+    ...
+    &quot;./exports/amd&quot;
+], function( jQuery ) {
+
+return ( window.jQuery = window.$ = jQuery );
+
+} );
+</code></pre><ul>
+<li>define()包含所有依赖的模块</li>
+<li>最后将jQuery对象暴露到全局，并取了个别名叫$。</li>
+</ul>
+<hr>
+<p><strong>core.js </strong><br>core.js先定义了jQuery对象</p>
+<pre><code>var jQuery = function( selector, context ) {
+    return new jQuery.fn.init( selector, context );
+}
+</code></pre><p>可以看出我们平时用的$()，比如$(“div”)，实际上是jQuery(“div”)，即<strong>new jQuery.fn.init(“div”)</strong>。</p>
+<p>jQuery.fn.init定义在src/core/init.js中，源码如下：</p>
+<pre><code>//英文的是自带的注释，已经比较清楚了
+init = jQuery.fn.init = function( selector, context, root ) {
+    // HANDLE: $(&quot;&quot;), $(null), $(undefined), $(false)
+    if ( !selector ) {
+        return this;
+    }
+
+    // Handle HTML strings
+    if ( typeof selector === &quot;string&quot; ) {
+        //匹配&quot;&lt;&quot;开头 &quot;&gt;&quot;结尾，因为标签不为空的时候中间肯定存在字符，所以长度大于3
+        if ( selector.charAt(0) === &quot;&lt;&quot; &amp;&amp; selector.charAt( selector.length - 1 ) === &quot;&gt;&quot; &amp;&amp; selector.length &gt;= 3 ) {
+            // match是一个匹配用的变量数组，长度为3，html字符串则第2个有值，id字符串则第3个有值，故这里html字符串第2个有值
+            match = [ null, selector, null ];
+        } 
+        else {
+            match = rquickExpr.exec( selector );
+        }
+
+        // Match html or make sure no context is specified for #id
+        if ( match &amp;&amp; ( match[ 1 ] || !context ) ) {
+
+            // HANDLE: $(html) -&gt; $(array)
+            if ( match[ 1 ] ) {
+                ...
+                    ) );
+
+                // HANDLE: $(html, props)
+                if ( rsingleTag.test( match[ 1 ] ) &amp;&amp; jQuery.isPlainObject( context ) ) {
+                    ...
+                }
+            }
+
+            return this;
+
+        // HANDLE: $(#id)
+        } else {
+            elem = document.getElementById( match[2] );
+
+            // 判断elem.parentNode，是为了黑莓4.6的取回的节点却不在document的特殊问题（#6963）
+            if ( elem &amp;&amp; elem.parentNode ) {
+                // 判断getElementById返回结果，是否是id的值造成的。（IE和Opera下，name对getElementById也生效的问题）
+                if ( elem.id !== match[2] ) {
+                    return rootjQuery.find( selector );
+                }
+
+                // 将结果注入jQuery对象中
+                this.length = 1;
+                this[0] = elem;
+            }
+
+            this.context = document;
+            this.selector = selector;
+            return this;
+
+        }
+    //context是(&quot;&quot;,null,undefined,false)的情况
+    } else if ( !context || context.jquery ) {
+        // HANDLE: $(expr, context)
+        // (which is just equivalent to: $(context).find(expr)
+        //find定义在selector-sizzle.js中，jQuery.find = Sizzle
+        return ( context || root ).find( selector );
+    } else {
+        //即jQuery( context ). find( selector )
+        return this.constructor( context ).find( selector );
+    }
+
+// HANDLE: $(DOMElement)
+} else if ( selector.nodeType ) {
+    this.context = this[ 0 ] = selector;
+    this.length = 1;
+    return this;
+
+// HANDLE: $(function)
+// Shortcut for document ready
+} else if ( jQuery.isFunction( selector ) ) {
+    return typeof root.ready !== &quot;undefined&quot; ?
+        root.ready( selector ) :
+
+        // Execute immediately if ready is not present
+        selector( jQuery );
+}
+
+if ( selector.selector !== undefined ) {
+    this.selector = selector.selector;
+    this.context = selector.context;
+}
+
+return jQuery.makeArray( selector, this );
+};
+</code></pre><p>可以看到 jQuery.fn.init函数处理各种传入$()里的参数。分一下6种情况：</p>
+<ol>
+<li>“”、null、undefined、false</li>
+<li>DOM元素</li>
+<li>字符串：HTML标签、HTML字符串、#id、选择器表达式</li>
+<li>函数（作为ready回调函数）</li>
+<li>jQuery对象</li>
+<li>其它(sizzle)</li>
+</ol>
+<hr>
+<p>扩展jQuery对象原型</p>
+<pre><code>jQuery.fn = jQuery.prototype = {
+    ...
+    constructor: jQuery,
+    ...
+
+    pushStack: function( elems ) {
+
+    // Build a new jQuery matched element set
+    var ret = jQuery.merge( this.constructor(), elems );
+
+    // Add the old object onto the stack (as a reference)
+    ret.prevObject = this;
+    ret.context = this.context;
+
+    // Return the newly-formed element set
+    return ret;
+},
+    ...一些其他辅助方法
+}
+</code></pre><p><strong>这里为什么要将consructor定义为jQuery呢？</strong></p>
+<p>在不重写prototype的情况下,constructor指向对象本身，比如：</p>
+<pre><code>obj = new Object()
+a = new obj()  
+//a.constructor === obj is true
+</code></pre><p>新定义Prototype对象的话，该Prototype对象原有的constructor属性会丢失<br>即</p>
+<pre><code>obj = new Object
+obj.prototype = {getName:function(){}}
+a = new obj()
+//a.constructor === obj is false
+//a.rototype.constructor === Object is true
+//a.prototype.constructor === Object is true
+</code></pre><p>于是通过将constructor显式的指向jQuery解决这个问题    </p>
+<hr>
+<p>之后定义了<em>extend</em>方法(这个方法平时见的比较多，写jquery插件都要用上)：<br>作用是扩展jQuery对象或者jQuery,prototype对象。</p>
+<pre><code>jQuery.extend = jQuery.fn.extend = function() {
+    //extend的作用是复制数组，通过第一个参数控制深复制(true)和浅复制
+    var src, copyIsArray, copy, name, options, clone,
+        target = arguments[0] || {},
+        i = 1,
+        length = arguments.length,
+        deep = false;
+
+    // 深复制
+    if ( typeof target === &quot;boolean&quot; ) {
+        deep = target;
+
+        // 跳过boolean值
+        target = arguments[ i ] || {};
+        i++;
+    }
+
+
+    if ( typeof target !== &quot;object&quot; &amp;&amp; !jQuery.isFunction(target) ) {
+        target = {};
+    }
+
+    // 只有一个参数时，表示扩展jQeury对象本身
+    if ( i === length ) {
+        target = this;
+        i--;
+    }
+
+    for ( ; i &lt; length; i++ ) {
+        // 跳过null参数
+        if ( (options = arguments[ i ]) != null ) {
+            // 扩展对象
+            for ( name in options ) {
+                src = target[ name ];
+                copy = options[ name ];
+
+                // 防止死循环
+                if ( target === copy ) {
+                    continue;
+                }
+
+                // 递归复制
+                if ( deep &amp;&amp; copy &amp;&amp; ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+                    if ( copyIsArray ) {
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+
+                    } else {
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+
+                    // Never move original objects, clone them
+                    target[ name ] = jQuery.extend( deep, clone, copy );
+
+                    // Don&apos;t bring in undefined values
+                } else if ( copy !== undefined ) {
+                    target[ name ] = copy;
+                }
+            }
+        }
+    }
+
+    // Return the modified object
+    return target;
+};
+</code></pre><p>之后core.js通过jQuery.extend扩展了一些静态方法</p>
+<pre><code>jQuery.extend( {
+    // Unique for each copy of jQuery on the page
+    expando: &quot;jQuery&quot; + ( version + Math.random() ).replace( /\D/g, &quot;&quot; ),
+
+    // Assume jQuery is ready without the ready module
+    isReady: true,
+    ...
+    isEmptyObject: function( obj ) {
+        var name;
+        for ( name in obj ) {
+            return false;
+        }
+        return true;
+    },
+
+    isPlainObject: function( obj ) {
+        var key;
+
+        // Must be an Object.
+        // Because of IE, we also have to check the presence of the constructor property.
+        // Make sure that DOM nodes and window objects don&apos;t pass through, as well
+        if ( !obj || jQuery.type( obj ) !== &quot;object&quot; || obj.nodeType || jQuery.isWindow( obj ) ) {
+            return false;
+        }
+        ...
+});
+</code></pre><hr>
+<p>core.js就做了以上的事，接着是selector.js<br>selector.js指向了<em>selector-sizzle.js</em>，<em>selector-sizzle.js</em>又指向了<em>../external/sizzle/dist/sizzle</em>。<br>sizzle是jquery的选择器引擎，从1.3被分离出来。sizzle采用Right To Left的查询匹配方式，效率较高。</p>
+
+</article>
+<nav id="pagination">
+  
+
+  
+    <a href="/2016/12/01/Openwrt配置SS智能翻墙/" class="next">下一页 &rarr;</a>
+  
+</nav>
+
+<div class="clear"></div>
+</div>
+
+
+    </div>
+    <!-- /main -->
+    
+    
+    <!-- footer -->
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2017</p>
+    <p>Theme by <a href="https://github.com/jelviss">Jelvis</a></p>
+</div>
+
+    </footer>
+    <!-- /footer -->
+
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      
+      <a class="back-home" href="/"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
+    
+</div>
+
+    <!-- /back-top -->
+
+    
+    <script src="/js/iQuery.js"></script>
+    <script src="/js/biu.js"></script>
+</body>
+</html>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- head  -->
+<head>
+    <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
+<title>
+    
+    Jelvis&#39;s Blog
+    
+</title>
+
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:1080px)"/>
+
+</head>
+<!-- /head -->
+
+<!-- body -->
+<body>
+
+    
+    <!-- header -->
+    <header class="header">
+      <div class="header-pc-wrap animated fadeInUp">
+  <div class="header-pc">
+    <div class="info-pc">
+      <img  class="avater-pc" src="/img/jelvis.gif">
+      <h2>Jelvis</h2>
+      <div class="description">
+        每天过的都一样,偶然会突发奇想
+      </div>
+      <div class="tags">
+        <a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+      </div>
+      <div class="contact">
+        
+          <a href="https://github.com/jelviss"> <i class="fa fa-github" aria-hidden="true"></i></a>
+        
+        
+          <a href="http://weibo.com/elvissg"> <i class="fa fa-weibo" aria-hidden="true"></i></a>
+        
+      </div>
+      <div class="friend">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header-mobile-wrap animated fadeInDown">
+  <div class="header-mobile">
+    <img src="/img/jelvis.gif">
+    <p class="mobile-author">Jelvis</p>
+    <p>每天过的都一样,偶然会突发奇想</p>
+    <div class="mobile-contact">
+      
+        <a href="https://github.com/jelviss"> <i class="fa fa-github" aria-hidden="true"></i></a>
+      
+      
+        <a href="http://weibo.com/elvissg"> <i class="fa fa-weibo" aria-hidden="true"></i></a>
+      
+    </div>
+  </div>
+</div>
+
+
+    </header>
+    <!-- /header -->
+    
+
+
+    <!-- main -->
+    <div class="main">
+        <!-- home-wrap -->
+<div class="container home-wrap">
+<article class="article-list">
+
+<div id="recent-posts">
+ 
+  
+    <article id="post-jQuery源码学习笔记一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2017/01/16/jQuery源码学习笔记一/">jQuery源码学习笔记一</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <blockquote>
+<p>版本是<a href="https://github.com/jquery/jquery/blob/1.12-stable" target="_blank" rel="external">1.12-stable</a><br>jquery-1.12-stable遵循AMD，使用了requirejs库，模块分的很清楚，比较好读</p>
+</blockquote>
+<p><strong>入口:src/jquery.js</strong><br>源码:</p>
+<pre><code>define( [
+    &quot;./core&quot;,
+    &quot;./selector&quot;,
+    ...
+    &quot;./exports/amd&quot;
+], function( jQuery ) {
+
+return ( window.jQuery = window.$ = jQuery );
+
+} );
+</code></pre><ul>
+<li>define()包含所有依赖的模块</li>
+<li>最后将jQuery对象暴露到全局，并取了个别名叫$。</li>
+</ul>
+<hr>
+<p><strong>core.js </strong><br>core.js先定义了jQuery对象</p>
+<pre><code>var jQuery = function( selector, context ) {
+    return new jQuery.fn.init( selector, context );
+}
+</code></pre><p>可以看出我们平时用的$()，比如$(“div”)，实际上是jQuery(“div”)，即<strong>new jQuery.fn.init(“div”)</strong>。</p>
+<p>jQuery.fn.init定义在src/core/init.js中，源码如下：</p>
+<pre><code>//英文的是自带的注释，已经比较清楚了
+init = jQuery.fn.init = function( selector, context, root ) {
+    // HANDLE: $(&quot;&quot;), $(null), $(undefined), $(false)
+    if ( !selector ) {
+        return this;
+    }
+
+    // Handle HTML strings
+    if ( typeof selector === &quot;string&quot; ) {
+        //匹配&quot;&lt;&quot;开头 &quot;&gt;&quot;结尾，因为标签不为空的时候中间肯定存在字符，所以长度大于3
+        if ( selector.charAt(0) === &quot;&lt;&quot; &amp;&amp; selector.charAt( selector.length - 1 ) === &quot;&gt;&quot; &amp;&amp; selector.length &gt;= 3 ) {
+            // match是一个匹配用的变量数组，长度为3，html字符串则第2个有值，id字符串则第3个有值，故这里html字符串第2个有值
+            match = [ null, selector, null ];
+        } 
+        else {
+            match = rquickExpr.exec( selector );
+        }
+
+        // Match html or make sure no context is specified for #id
+        if ( match &amp;&amp; ( match[ 1 ] || !context ) ) {
+
+            // HANDLE: $(html) -&gt; $(array)
+            if ( match[ 1 ] ) {
+                ...
+                    ) );
+
+                // HANDLE: $(html, props)
+                if ( rsingleTag.test( match[ 1 ] ) &amp;&amp; jQuery.isPlainObject( context ) ) {
+                    ...
+                }
+            }
+
+            return this;
+
+        // HANDLE: $(#id)
+        } else {
+            elem = document.getElementById( match[2] );
+
+            // 判断elem.parentNode，是为了黑莓4.6的取回的节点却不在document的特殊问题（#6963）
+            if ( elem &amp;&amp; elem.parentNode ) {
+                // 判断getElementById返回结果，是否是id的值造成的。（IE和Opera下，name对getElementById也生效的问题）
+                if ( elem.id !== match[2] ) {
+                    return rootjQuery.find( selector );
+                }
+
+                // 将结果注入jQuery对象中
+                this.length = 1;
+                this[0] = elem;
+            }
+
+            this.context = document;
+            this.selector = selector;
+            return this;
+
+        }
+    //context是(&quot;&quot;,null,undefined,false)的情况
+    } else if ( !context || context.jquery ) {
+        // HANDLE: $(expr, context)
+        // (which is just equivalent to: $(context).find(expr)
+        //find定义在selector-sizzle.js中，jQuery.find = Sizzle
+        return ( context || root ).find( selector );
+    } else {
+        //即jQuery( context ). find( selector )
+        return this.constructor( context ).find( selector );
+    }
+
+// HANDLE: $(DOMElement)
+} else if ( selector.nodeType ) {
+    this.context = this[ 0 ] = selector;
+    this.length = 1;
+    return this;
+
+// HANDLE: $(function)
+// Shortcut for document ready
+} else if ( jQuery.isFunction( selector ) ) {
+    return typeof root.ready !== &quot;undefined&quot; ?
+        root.ready( selector ) :
+
+        // Execute immediately if ready is not present
+        selector( jQuery );
+}
+
+if ( selector.selector !== undefined ) {
+    this.selector = selector.selector;
+    this.context = selector.context;
+}
+
+return jQuery.makeArray( selector, this );
+};
+</code></pre><p>可以看到 jQuery.fn.init函数处理各种传入$()里的参数。分一下6种情况：</p>
+<ol>
+<li>“”、null、undefined、false</li>
+<li>DOM元素</li>
+<li>字符串：HTML标签、HTML字符串、#id、选择器表达式</li>
+<li>函数（作为ready回调函数）</li>
+<li>jQuery对象</li>
+<li>其它(sizzle)</li>
+</ol>
+<hr>
+<p>扩展jQuery对象原型</p>
+<pre><code>jQuery.fn = jQuery.prototype = {
+    ...
+    constructor: jQuery,
+    ...
+
+    pushStack: function( elems ) {
+
+    // Build a new jQuery matched element set
+    var ret = jQuery.merge( this.constructor(), elems );
+
+    // Add the old object onto the stack (as a reference)
+    ret.prevObject = this;
+    ret.context = this.context;
+
+    // Return the newly-formed element set
+    return ret;
+},
+    ...一些其他辅助方法
+}
+</code></pre><p><strong>这里为什么要将consructor定义为jQuery呢？</strong></p>
+<p>在不重写prototype的情况下,constructor指向对象本身，比如：</p>
+<pre><code>obj = new Object()
+a = new obj()  
+//a.constructor === obj is true
+</code></pre><p>新定义Prototype对象的话，该Prototype对象原有的constructor属性会丢失<br>即</p>
+<pre><code>obj = new Object
+obj.prototype = {getName:function(){}}
+a = new obj()
+//a.constructor === obj is false
+//a.rototype.constructor === Object is true
+//a.prototype.constructor === Object is true
+</code></pre><p>于是通过将constructor显式的指向jQuery解决这个问题    </p>
+<hr>
+<p>之后定义了<em>extend</em>方法(这个方法平时见的比较多，写jquery插件都要用上)：<br>作用是扩展jQuery对象或者jQuery,prototype对象。</p>
+<pre><code>jQuery.extend = jQuery.fn.extend = function() {
+    //extend的作用是复制数组，通过第一个参数控制深复制(true)和浅复制
+    var src, copyIsArray, copy, name, options, clone,
+        target = arguments[0] || {},
+        i = 1,
+        length = arguments.length,
+        deep = false;
+
+    // 深复制
+    if ( typeof target === &quot;boolean&quot; ) {
+        deep = target;
+
+        // 跳过boolean值
+        target = arguments[ i ] || {};
+        i++;
+    }
+
+
+    if ( typeof target !== &quot;object&quot; &amp;&amp; !jQuery.isFunction(target) ) {
+        target = {};
+    }
+
+    // 只有一个参数时，表示扩展jQeury对象本身
+    if ( i === length ) {
+        target = this;
+        i--;
+    }
+
+    for ( ; i &lt; length; i++ ) {
+        // 跳过null参数
+        if ( (options = arguments[ i ]) != null ) {
+            // 扩展对象
+            for ( name in options ) {
+                src = target[ name ];
+                copy = options[ name ];
+
+                // 防止死循环
+                if ( target === copy ) {
+                    continue;
+                }
+
+                // 递归复制
+                if ( deep &amp;&amp; copy &amp;&amp; ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+                    if ( copyIsArray ) {
+                        copyIsArray = false;
+                        clone = src &amp;&amp; jQuery.isArray(src) ? src : [];
+
+                    } else {
+                        clone = src &amp;&amp; jQuery.isPlainObject(src) ? src : {};
+                    }
+
+                    // Never move original objects, clone them
+                    target[ name ] = jQuery.extend( deep, clone, copy );
+
+                    // Don&apos;t bring in undefined values
+                } else if ( copy !== undefined ) {
+                    target[ name ] = copy;
+                }
+            }
+        }
+    }
+
+    // Return the modified object
+    return target;
+};
+</code></pre><p>之后core.js通过jQuery.extend扩展了一些静态方法</p>
+<pre><code>jQuery.extend( {
+    // Unique for each copy of jQuery on the page
+    expando: &quot;jQuery&quot; + ( version + Math.random() ).replace( /\D/g, &quot;&quot; ),
+
+    // Assume jQuery is ready without the ready module
+    isReady: true,
+    ...
+    isEmptyObject: function( obj ) {
+        var name;
+        for ( name in obj ) {
+            return false;
+        }
+        return true;
+    },
+
+    isPlainObject: function( obj ) {
+        var key;
+
+        // Must be an Object.
+        // Because of IE, we also have to check the presence of the constructor property.
+        // Make sure that DOM nodes and window objects don&apos;t pass through, as well
+        if ( !obj || jQuery.type( obj ) !== &quot;object&quot; || obj.nodeType || jQuery.isWindow( obj ) ) {
+            return false;
+        }
+        ...
+});
+</code></pre><hr>
+<p>core.js就做了以上的事，接着是selector.js<br>selector.js指向了<em>selector-sizzle.js</em>，<em>selector-sizzle.js</em>又指向了<em>../external/sizzle/dist/sizzle</em>。<br>sizzle是jquery的选择器引擎，从1.3被分离出来。sizzle采用Right To Left的查询匹配方式，效率较高。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+    <article id="post-Openwrt配置SS智能翻墙" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2016/12/01/Openwrt配置SS智能翻墙/">Openwrt配置SS智能翻墙笔记</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <p>路由器：XiaoMi<br>需要安装的软件包：</p>
+<ul>
+<li>shadowsocks-libev</li>
+<li>chinadns</li>
+<li>luci-app-shadowsocks</li>
+<li>luci-app-chinadns</li>
+<li>dnsmasq-full(把自带的dnsmasql卸了装这个，支持min-cache-ttl)</li>
+</ul>
+<p>1、先设置ss，因为安装了luci-app-shadowsocks，直接进后台，后面两步也是在web后台操作，填写ss服务器信息，勾选透明代理，端口1080，代理协议TCP+UDP。保存并应用ss-redir就跑起来了。</p>
+<p>2、设置chinadns，勾选“启动”、“启动双向过滤”、“启动DNS压缩指针”，本地端口5353，上游服务器114.114.114.114,8.8.8.8:53(ps:一定要填两个，不然启动不起来，国内走114，国外走8888)</p>
+<p>3、打开选项卡(网络-DHCP/DNS)，设置DNS转发127.0.0.1#5353(就是刚才chinadns的端口),在host和解析文件选项卡中勾选<em>忽略解析文件</em>和<em>忽略/etc/hosts</em>。</p>
+<p>4、接下来我试了两种办法智能翻</p>
+<ul>
+<li><p>一种是白名单方式，从apnic爬取国内ip段(<a href="https://github.com/elvissg/config/blob/master/gen_Asiaip.sh" target="_blank" rel="external">爬取脚本</a>)，利用iptables将国内ip直接通过，其余全部走ss代理。<br>结果爬下来有7000多条，每次重启添加到iptables都要添加个好几分钟，mdzz。</p>
+</li>
+<li><p>于是用了第二种黑名单的方式，利用gfwlist，被墙的走代理。这看起来比较合理。<br>在/etc/dnsmasq.conf最后添加</p>
+</li>
+</ul>
+<pre><code>conf-dir=/etc/dnsmasq.d
+cache-size=1500
+min-cache-ttl=720
+</code></pre><p>新建dnsmasq.conf目录，生成dnsmasq_list.conf，<a href="https://github.com/cokebar/gfwlist2dnsmasq/blob/master/gfwlist2dnsmasq.py" target="_blank" rel="external">github上找的生成脚本</a><br>格式看起是这样:</p>
+<pre><code>dserver=/.github.com/127.0.0.1#5353　#使用UDP转发的方式解析该域名，实际查询的DNS是Google DNS。
+ipset=/.github.com/gfwlist　　#将解析出来的IP保存到名为gfwlist的ipset表中。
+</code></pre><p>在网络-防火墙-自定义规则添加</p>
+<pre><code>ipset -N gfwlist iphash
+iptables -t nat -A PREROUTING -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
+iptables -t nat -A OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
+</code></pre><p>最后在/etc/init.d/shadowsocks里把ss-rules那段注释掉，不然每次都会生成一条SS_SPEC_WAN_FW链全局代理，每次还要去删很麻烦。</p>
+<p>重启路由，试试访问baidu.com和httpbin.org/ip，后者显示的应该是代理服务器ip。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+    <article id="post-CoreOS学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2015/06/29/CoreOS学习笔记/">CoreOS学习笔记</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <p>以下为在windows上实验:</p>
+<ul>
+<li>首先利用vagrant + virtualbox安装CoreOS</li>
+</ul>
+<pre><code>git clone https://github.com/coreos/coreos-vagrant/
+cd coreos-vagrant
+cp config.rb.sample config.rb
+cp user-data.sample user-data
+</code></pre><ul>
+<li>修改 config.rb 文件</li>
+</ul>
+<pre><code># Size of the CoreOS cluster created by Vagrant
+$num_instances=3
+</code></pre><ul>
+<li>修改user-data</li>
+</ul>
+<p>去<a href="https://coreos.com/docs/cluster-management/setup/cluster-discovery/" target="_blank" rel="external">https://discovery.etcd.io/new?size=3</a>申请cluster  discovery修改discovery</p>
+<p>Coreos 的配置是利用cloud-config.yml<br>coreos-cloudinit -from-file=cloud-config.yaml</p>
+<p>启动虚拟机:</p>
+<pre><code>vagrant up --provision
+</code></pre><p>连接虚拟机core-01:</p>
+<pre><code>vagrant ssh core-01 -- -A
+</code></pre><h3 id="登陆后可以用fleet进行集群管理："><a href="#登陆后可以用fleet进行集群管理：" class="headerlink" title="登陆后可以用fleet进行集群管理："></a>登陆后可以用fleet进行集群管理：</h3><p>用<code>fleetctl list_machines</code>查看。</p>
+<p>(加上<code>-- -A</code>参数可以把密钥带入登陆的虚拟机，以便fleet直接从一个节点ssh到另一个节点,命令:<code>fleetctl ssh id</code>)</p>
+<p><code>此处遇到的问题:</code></p>
+<pre><code>1. fleetctl ssh id时报错The SSH_AUTH_SOCK environment variable must be set 
+    解决:
+    ssh-agent
+    ssh-add /home/core/fleet/fixtures/insecure_private_key(注意：权限必须是600)
+    echo $SSH_AUTH_SOCK
+2. 执行ssh-add时出现
+    Could not open a connection to your authentication agent
+　  ssh-agent bash
+</code></pre><p>　<br>这样就搭好了一个有三个服务器的CoreOS集群</p>
+<hr>
+<h3 id="有时候这样配置以后不能自动Discovery服务器-需要手动添加"><a href="#有时候这样配置以后不能自动Discovery服务器-需要手动添加" class="headerlink" title="有时候这样配置以后不能自动Discovery服务器,需要手动添加:"></a>有时候这样配置以后不能自动Discovery服务器,需要手动添加:</h3><pre><code>etcd -name=&quot;core-01&quot; -addr=&quot;172.16.8.101:4001&quot; -peer-addr=&quot;172.16.8.101:7001&quot; -peers=&quot;172.16.8.102:7001,172.16.8.103:7001&quot; -data-dir=&quot;/home/core/etcd&quot;  
+</code></pre><hr>
+<p>接下来跨节点执行命令:</p>
+<pre><code>$ fleetctl ssh 其他节点id cat /etc/environment
+COREOS_PUBLIC_IPV4=10.0.2.13
+COREOS_PRIVATE_IPV4=172.17.8.101
+</code></pre><p>在服务管理方面Fleet使用和Systemd相似的Unit文件进行配置。不同的地方在于，Fleet额外支持一个X-Fleet配置段，用于指定服务可以在哪些节点上运行。例如下面这个Unit文件。</p>
+<pre><code># Don&apos;t schedule on the same machine as other hello instances
+X-Conflicts=hello*.service
+X-Conflicts 指定了这个 Hello 服务不能运行在“任意已经分配了任何名字以hello开头的服务”的节点上
+</code></pre><p>  由于Fleet需要在集群层面上对服务进行管理，因此它的服务管理流程与Systemd略有不同。最明显的两个区别是：Fleet没有指定Unit文件必须放置在哪些目录下，而是直接通过参数的方式告诉fleetctl命令。使用上面的内容在用户的主目录下创建hello.service文件，然后来通过fleetctl start启动这个服务。</p>
+<p>现在建立一个hello.service:</p>
+<pre><code>[Unit]
+Description=Hello World
+After=docker.service
+Requires=docker.service
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill busybox1
+ExecStartPre=-/usr/bin/docker rm busybox1
+ExecStartPre=/usr/bin/docker pull busybox
+ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c &quot;while true; do echo Hello World; sleep 1; done&quot;
+ExecStop=/usr/bin/docker kill busybox1
+[X-Fleet]
+# Don&apos;t schedule on the same machine as other hello instances
+X-Conflicts=hello*.service
+</code></pre><hr>
+<pre><code>$ fleetctl start ${HOME}/hello.service
+Unit hello.service launched on 0acdd9bf.../10.0.2.15
+
+$ fleetctl list-units
+UNIT MACHINE ACTIVE SUB
+hello.service 0acdd9bf.../10.0.2.15 active running
+</code></pre><hr>
+<p>服务的提交阶段，这个步骤仅仅是在Fleet服务中完成的，目的是将指定的Unit文件添加到Fleet的记录缓存。此时Fleet并不会与Systemd进行通信。通过 fleetctl list-unit-files 和 fleetctl list-units 命令可以看到，Unit文件被提交后，并没有出现在后者的记录中。此时这个Unit文件已经被注册为一个Fleet可识别的Unit名称，但还不是一个可以执行的的服务。</p>
+<pre><code>$ fleetctl submit ${HOME}/hello.service
+$ fleetctl list-unit-files
+UNIT HASH DSTATE STATE TARGET
+hello.service 4bff33d inactive inactive -
+$ fleetctl list-units
+UNIT MACHINE ACTIVE SUB
+</code></pre><p> 其他命令:</p>
+<pre><code>$ fleetctl cat hello.service #查看
+$ fleetctl load hello.service #载入
+加载服务实际上是根据Unit文件的 X-Fleet 配置段条件，将服务传递到符合条件的特定节点的本地Systemd系统的过程，这个过程中Fleet通过DBus API与节点的Systemd进行了通信。
+
+$ fleetctl start hello.service #启动
+刚刚启动的服务会处于start-pre状态（服务正在执行Unit文件中的ExecStartPre部分操作），几分钟后再次查看服务的状态，服务状态就会变为running了。
+
+$ fleetctl status hello.service #查看状态
+$ fleetctl journal --lines 20 hello.service #指定行
+$ fleetctl journal -f hello.service #跟随日志输出
+
+$ fleetctl journal hello.service #查看日志
+$ fleetctl stop hello.service #停止
+$ fleetctl unload hello.service #卸载
+$ fleetctl destroy hello.service #销毁
+$ fleetctl ssh hello # 跳转到运行Hello服务的节点
+</code></pre><p><em><a href="http://www.infoq.com/cn/articles/what-is-coreos" target="_blank" rel="external">http://www.infoq.com/cn/articles/what-is-coreos</a></em><br><em><a href="http://www.infoq.com/cn/articles/coreos-analyse-etcd" target="_blank" rel="external">http://www.infoq.com/cn/articles/coreos-analyse-etcd</a></em></p>
+
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+    <article id="post-LNMP安装" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2015/06/20/LNMP安装/">LNMP安装</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <h2 id="采用yum安装"><a href="#采用yum安装" class="headerlink" title="采用yum安装"></a>采用yum安装</h2><p>Nginx</p>
+<pre><code>rpm -ivh http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+yum install -y nginxm
+</code></pre><p>Mysql</p>
+<pre><code>yum install -y mysql-devel mysql-server
+</code></pre><p>PHP</p>
+<pre><code>yum install -y php php-fpm
+</code></pre><h2 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h2><p>下载pcre  （支持nginx伪静态）<br>ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/<br>编译安装</p>
+<ul>
+<li>Nginx</li>
+</ul>
+<p>下载源码:<a href="http://nginx.org/en/download.html" target="_blank" rel="external">http://nginx.org/en/download.html</a></p>
+<pre><code>./configure  --prefix=/usr/local/php  \
+
+--with-mysql=/usr/local/mysql \#设置mysql的安装路径
+
+--enable-fastcgi \ #开启fastcgi支持
+
+--enable-debug \ #支持调试 
+
+--with-openssl=/usr/ --with-pcre=/usr/local/src/pcre 
+</code></pre><hr>
+<ul>
+<li>mysql </li>
+</ul>
+<pre><code>groupadd mysql  #添加mysql组    
+useradd -g mysql mysql -s /bin/false  #创建用户mysql并加入到mysql组
+</code></pre><p>安装一些必要的组件:</p>
+<pre><code>yum -y install make gcc-c++ cmake bison-devel  ncurses-devel gcc autoconf automake zlib* fiex* libxml* libmcrypt* libtool-ltdl-devel*
+</code></pre><p>下载源码: <a href="http://dev.mysql.com/downloads/mysql/" target="_blank" rel="external">http://dev.mysql.com/downloads/mysql/</a></p>
+<pre><code>cmake \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DMYSQL_DATADIR=/data/mysql/data \
+-DSYSCONFDIR=/etc \
+-DWITH_MYISAM_STORAGE_ENGINE=1 \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_MEMORY_STORAGE_ENGINE=1 \
+-DWITH_READLINE=1 \
+-DMYSQL_UNIX_ADDR=/tmp/mysql/mysql.sock \
+-DMYSQL_TCP_PORT=3306 \
+-DENABLED_LOCAL_INFILE=1 \
+-DWITH_PARTITION_STORAGE_ENGINE=1 \
+-DEXTRA_CHARSETS=all \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci
+
+
+make &amp;&amp; make install
+
+
+报错:FATAL ERROR: Could not find ./bin/my_print_defaults
+解决:/usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data &amp;
+</code></pre><hr>
+<p>如果默认绑定的是ipv6<br>需要在my.cnf中加入</p>
+<pre><code>[mysqld]
+bind-address=0.0.0.0#绑定ipv4
+port=3306
+</code></pre><ul>
+<li>PHP<br>下载源码: <a href="http://www.php.net/releases/" target="_blank" rel="external">http://www.php.net/releases/</a><br>编译参数:</li>
+</ul>
+<pre><code>./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --with-mysql=/usr/local/mysql --with-mysqli=/usr/local/bin/mysql_config --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-discard-path --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --with-curlwrappers --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-mcrypt --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-ldap --with-ldap-sasl --with-xmlrpc --enable-zip --enable-soap --without-pear --with-zlib --enable-pdo --with-pdo-mysql --with-mysql --with-fpm-systemd
+</code></pre>
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+    <article id="post-Python-Request库学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2015/06/19/Python-Request库学习笔记/">Python-Request库学习笔记</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <ul>
+<li>基本Get请求：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+r = requests.get(url)
+print r.text
+</code></pre><hr>
+<ul>
+<li>带参数Get请求：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+payload = {&apos;key1&apos;: &apos;value1&apos;, &apos;key2&apos;: &apos;value2&apos;}
+r = requests.get(url, params=payload)
+print r.text
+</code></pre><ul>
+<li>POST请求模拟登陆及一些返回对象的方法：</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+res1 = requests.post(url1, data=data, headers=headers)
+res2 = requests.get(url2, cookies=res1.cookies, headers=headers)
+
+print res2.content#获得二进制响应内容
+print res2.raw#获得原始响应内容,需要stream=True
+print res2.raw.read(50)
+print type(res2.text)#返回解码成unicode的内容
+print res2.url
+print res2.history#追踪重定向
+print res2.cookies
+print res2.cookies[&apos;example_cookie_name&apos;]
+print res2.headers
+print res2.headers[&apos;Content-Type&apos;]
+print res2.headers.get(&apos;content-type&apos;)
+print res2.json#讲返回内容编码为json
+print res2.encoding#返回内容编码
+print res2.status_code#返回http状态码
+print res2.raise_for_status()#返回错误状态码
+</code></pre><hr>
+<ul>
+<li>使用Session()对象的写法（Prepared Requests）:</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+s = requests.Session()
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+
+prepped1 = requests.Request(&apos;POST&apos;, url1,
+    data=data,
+    headers=headers
+).prepare()
+s.send(prepped1)
+
+
+&apos;&apos;&apos;
+也可以这样写
+res = requests.Request(&apos;POST&apos;, url1,
+data=data,
+headers=headers
+)
+prepared = s.prepare_request(res)
+# do something with prepped.body
+# do something with prepped.headers
+s.send(prepared)
+&apos;&apos;&apos;
+
+prepare2 = requests.Request(&apos;POST&apos;, url2,
+    headers=headers
+).prepare()
+res2 = s.send(prepare2)
+
+print res2.content
+</code></pre><ul>
+<li>另一种写法 :</li>
+</ul>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+s = requests.Session()
+url1 = &apos;http://www.exanple.com/login&apos;#登陆地址
+url2 = &quot;http://www.example.com/main&quot;#需要登陆才能访问的页面地址
+data={&quot;user&quot;:&quot;user&quot;,&quot;password&quot;:&quot;pass&quot;}
+headers = { &quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;&quot;,
+            &quot;Accept-Encoding&quot;:&quot;gzip&quot;,
+            &quot;Accept-Language&quot;:&quot;zh-CN,zh;q=0.8&quot;,
+            &quot;Referer&quot;:&quot;http://www.example.com/&quot;,
+            &quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36&quot;
+            }
+res1 = s.post(url1, data=data)
+res2 = s.post(url2)
+print(resp2.content)
+</code></pre><p><a href="http://cn.python-requests.org/en/latest/api.html#sessionapi" target="_blank" rel="external">SessionApi</a></p>
+<ul>
+<li>其他的一些请求方式</li>
+</ul>
+<pre><code>&gt;&gt;&gt; r = requests.put(&quot;http://httpbin.org/put&quot;)
+&gt;&gt;&gt; r = requests.delete(&quot;http://httpbin.org/delete&quot;)
+&gt;&gt;&gt; r = requests.head(&quot;http://httpbin.org/get&quot;)
+&gt;&gt;&gt; r = requests.options(&quot;http://httpbin.org/get&quot;)
+</code></pre><h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题:"></a>遇到的问题:</h3><hr>
+<p>在cmd下执行，遇到个小错误:</p>
+<pre><code>UnicodeEncodeError:&apos;gbk&apos; codec can&apos;t encode character u&apos;\xbb&apos; in   
+position 23460: illegal multibyte sequence
+</code></pre><p>分析:<br>1、Unicode是编码还是解码</p>
+<pre><code>UnicodeEncodeError
+</code></pre><p>很明显是在编码的时候出现了错误</p>
+<p>2、用了什么编码</p>
+<pre><code>&apos;gbk&apos; codec can&apos;t encode character
+</code></pre><p>使用GBK编码出错</p>
+<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><p>确定当前字符串，比如</p>
+<pre><code>#-*- coding:utf-8 -*-
+import requests
+url = &apos;http://www.baidu.com&apos;
+r = requests.get(url)
+print r.encoding
+&gt;utf-8
+</code></pre><p>已经确定html的字符串是utf-8的，则可以直接去通过utf-8去编码。</p>
+<pre><code>print r.text.encode(&apos;utf-8&apos;)
+</code></pre><hr>
+<p>参考链接：<a href="http://www.python-requests.org/en/latest/" target="_blank" rel="external">官方文档</a>            </p>
+
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+    <article id="post-gentoo安装" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+     <header class="article-header">
+      <h1><a href="/2015/05/19/gentoo安装/">gentoo安装</a></h1>
+     </header>
+    <div class="article-entry" itemprop="articleBody">
+      <blockquote>
+<p>Gentoo的安装笔记</p>
+</blockquote>
+<p>用livecd引导：</p>
+<pre><code>mount /dev/sdax /mnt/gentoo
+</code></pre><p>将stage3解压到/mnt/gentoo,将protage解压到/mnt/gentoo/usr/</p>
+<pre><code>mount --bind /dev /mnt/gentoo/dev
+--bind命令我的理解是：将/mnt/gentoo/dev目录的内容暂时用/dev里的内容代替
+
+mount -t proc proc /mnt/gentoo/proc
+chroot /mnt/gentoo /bin/bash
+env-update &amp;&amp; source /etc/profile
+</code></pre><p>配置/etc/portage/make.conf换源(最新版本的是配置/etc/portage/repos.conf/*，<a href="https://wiki.gentoo.org/wiki/Project:Portage/Sync" target="_blank" rel="external">官方wiki-Sync</a>)</p>
+<pre><code>cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
+/etc/portage/repos.conf/gentoo.conf
+[gentoo]
+location = /usr/portage
+sync-type = rsync#同时还支持git
+sync-uri = rsync://rsync.gentoo.org/gentoo-portage
+auto-sync = yes
+
+emerge --sync #更新portage
+passwd #记得改密码
+
+emerge -av grub2
+grub: /boot/grub/grub.cfg
+emerge -av gcc
+gcc-config 2
+emerge -c gcc
+</code></pre><p>注释 /etc/conf.d/local.start 里面全部东西，或用下面的指令清空</p>
+<pre><code>cat /dev/null &gt; /etc/conf.d/local.start
+rc-update del autoconfig
+</code></pre><p>设定时区</p>
+<pre><code>rm /etc/localtime
+ln –s /usr/share/zoneinfo/Asia/Taipei /etc/localtime
+</code></pre><p>修改 /etc/fstab</p>
+<pre><code>/dev/sda8 / ext4 defaults 0 1
+</code></pre><p>编译内核</p>
+<pre><code>lspci -k  观察需要的驱动
+WLAN驱动 注意把firmware编译成模块
+声卡驱动 
+</code></pre><ul>
+<li>/etc/pam.d/login  有关root登陆问题</li>
+<li>wpa_supplicant 连接wifi问题</li>
+</ul>
+<p>如果 wpa_cli不能开启</p>
+<pre><code>/etc/wap_supplicant.conf
+其他注释掉
+ctrl_interface=/var/run/wpa_supplicant
+wpa_supplicant -Dwext -i wlan0 -c //etc/wap_supplicant    
+</code></pre><p>wext 是驱动名字，大部分是这个<br>这时候就可以连接cli了<br>wpa_cli -i wlan0</p>
+<pre><code>add_network 返回一个数
+0
+set_network 0 ssid &quot;ABC&quot;
+set_network 0 psk &quot;65445&quot; 注意这里只能是双引号。。。
+select_network 0
+enable_network 0
+</code></pre><hr>
+<p><code>把/etc/shadow后面两个冒号之间的*去掉可以重置密码</code></p>
+<hr>
+<p>添加网络开机自启动</p>
+<pre><code>ln -s /etc/init.d/net.lo /etc/init.d/net.enp4s
+/etc/conf.d/net内容
+config_enp4s0=(&quot;192.168.0.7/24&quot;)
+routes_enp4s0=(&quot;default via 192.168.0.1&quot; )
+emerge -av pciutils wireless-tools mlocate wpa_supplicant
+</code></pre><p>安装图形界面</p>
+<pre><code>先配置USE /usr/portage/make.conf USE加入X
+安装xorg-server
+
+Xorg -configure
+cp /root/xorg.conf.new /etc/X11/xorg.conf
+</code></pre><p>如果在home目录下存在一个名为.xinitrc的文件，它将会执行文件中列出的命令。<br>否则，它将会读取XSESSION变量并执行/etc/X11/Sessions/中可用的一个会话。你可以在/etc/rc.conf中设置系统上所有用户的默认XSESSION变量值。<br>如果以上所有都失败了，那么它将会回到一个简单的窗口管理器，通常是twm。</p>
+<p>WM选择dwm+dmenu 或者 awesome,终端模拟器选择自带的uxterm</p>
+<hr>
+<p>uxterm字体问题<br>安装输入法</p>
+<pre><code>emerge fcitx fcitx-pinyin
+</code></pre><p>配置声音</p>
+<pre><code>emerge alsa-utils
+$alsamixer
+</code></pre><p>默认是静音问题<br>可以通过M来切换<br>不过主要是因为默认把模式设为了HDMI</p>
+<pre><code>aplay -l
+vi /etc/asound.conf
+defaults.pcm.card0
+defaults.pcm.device0
+</code></pre><p>启动图形界面是启动输入法:<br>    vi .xinitrc<br>    exec fcitx加入到 exec dwm前</p>
+<p>卸载桌面：</p>
+<pre><code>emerge eix &amp;&amp; update-eix
+eix -CI xfce --only-names | xargs emerge -pC
+(先p看清楚)
+
+然后再mask这个套件的核心，比如xfce4-session
+之后的emerge -avuDN world     之类就会告诉你那些没有被包括进xfce-base和xfce-extra的依赖包包
+</code></pre><p>删一套桌面的时候，甚至连基本库，如kdelib, libgnome, libxfce<em>**</em> 都可以mask<br>需要mask的包写在/etc/protage/package.keywords</p>
+<pre><code>emerge --depclean 清楚没有依赖关系的包
+revdep-rebuild
+autocutsel 这个包可以实现从终端粘贴到火狐  不好用
+</code></pre><p>)</p>
+<p>grub2 识别win7需要装这个</p>
+<pre><code>emerge -av os-prober
+</code></pre><p>将gentoo安装到lvm:</p>
+<pre><code>pvcreate /dev/sdax
+vgcreate Vol /dev/sdax
+lvcreat -L 20G Vol
+</code></pre><p>lvm 重启消失需要激活</p>
+<pre><code>vgscan  //扫描所有磁盘得到卷组信息
+vgchange -ay  //激活系统所有卷组vg
+</code></pre><p>1、必须emerge lvm2 而且 rc-update add lvm boot后。grub2-install /dev/sda才能成功，否则会提示无法写入的提示。导致grub2安装失败。<br>2、必须采用genkernel形式才可引导。即按照原普通手册制作完成后，在制作内核后，emerge genkernel，然后genkernel –lvm –install initramfs。生成initramfs<br>3、用grub2-mkconfig -o /boot/grub/grub.cfg后，必须修改grub.cfg。在linux /boot/kernel-xxxx ro 这句话里的”ro”后面加上dolvm 注意要有空格。即我的是<br>“linux /boot/kernel-3.10.17-gentoo root=/dev/mapper/vg-root dolvm ro”</p>
+<p>修改 /etc/fstab</p>
+<pre><code>/dev/vg/lv  ext4 defaults 0 0
+</code></pre><p>记得passwd</p>
+<hr>
+<p>更新:</p>
+<p>emerge –sync      //升级整个portage目录<br>emerge portage     //如果不是最新的portage，需要按提示执行此操作<br>emerge python     //如果不是最新的python，需要按提示执行此操作<br>/usr/sbin/update-python     //执行完emerge python后执行此操作</p>
+<p>emerge -avuDN world      //按照 /var/lib/portage/world 文件下的包，重新构建整个系统<br> 参数说明：  –ask (-a)  控制Portage显示它要更新的软件包列表，并让您决定是否继续更新<br>                –verbose (-v) 在屏幕上输出完整的文件列表<br>                –update (-u) 更新包的最佳版本<br>                –deep (-D)  更新系统中的每个软件包<br>                –newuse (-N) USE标记变更后，要使Portage检查USE标记的变动是否导致<br>                            需要安装新的软件包或者将现有的包重新编译</p>
+<p>emerge -av –depclean     //清除不需要（孤立）的软件包</p>
+<p>revdep-rebuild     //gentoolkit包里面的一个软件，用来检查系统的依赖关系是否都满足，<br>                            自动安装没有满足关系的包</p>
+<p>dispatch-conf     //更新系统的配置文件</p>
+<p>emerge -e world     //本地重新编译整个系统，USE标记变化不大时不需执行</p>
+<hr>
+<p>将gentoo改用systemd启动:</p>
+<p>systemd</p>
+<p><a href="http://wiki.gentoo.org/wiki/Systemd" target="_blank" rel="external">参照官方wiki</a></p>
+<pre><code>/etc/default/grub
+
+GRUB_CMDLINE_LINUX=&quot;init=/usr/lib/systemd/systemd&quot;
+use加上systemd
+
+emerge -avuDN world
+
+emerge --depclean
+
+dispatch-conf
+
+revdep-rebuild
+</code></pre><hr>
+<p>ebuild知识(转)</p>
+<ol>
+<li><p>定位ebuild<br> 基础知识，比如<br> $emerge -s gcal</p>
+<ul>
+<li><p>app-misc/gcal<br>Latest version available: 3.01<br>Latest version installed: [ Not Installed ]<br>Size of downloaded files: 2,315 kB<br>Homepage: <a href="http://www.gnu.org/software/gcal/gcal.html" target="_blank" rel="external">http://www.gnu.org/software/gcal/gcal.html</a><br>Description: The GNU Calendar - a replacement for cal</p>
+<p>那么gcal这个软件的ebuild就在/usr/portage/app-misc/gcal/下面<br>在这个目录下，一般能看到很多ebuild文件，分别对应不同版本号</p>
+</li>
+</ul>
+</li>
+<li><p>怎么继续前次的ebuild操作?<br>比如，emerge到一半，发现一个错误，你google/去论坛搜了一圈，找出了解决办法，难道非要从头开始么? 解决办法其实很多了，说几个最常用的<br>a. 使用ccache<br>每个人都应该把它打开<br>emerge ccache之后，在/etc/make.conf里面<br>找到FEATURES设置，加上<br>FEATURES=”ccache”<br>以及CCACHE_SIZE=”2G”<br>默认好像是2G，我觉得如果硬盘空间足够，多多益善。<br>下次emerge的时候，你会发现编译的速度快了很多。这样间接起到了中断继续的效果。个人推荐这个方法，最简单。</p>
+</li>
+</ol>
+<p>继续make<br>emerge也就是一个用源码编译/安装的过程，而gnu make系统也保证了它实际上是可以”断点续传”的。而gentoo的portage系统在每次开始新的emerge的时候，会自己删掉以前的临时目录，重新生成，造成中断的emerge过程不可恢复。<br>你只要进入到临时目录，一般是<br>/var/tmp/portage/ebuild名称/work/ebuild名称/<br>下继续make，然后make install就行<br>不用怀疑，这样已经装好了。。但是，这样安装的软件包不会被记载在portage的world file里面。。所以，更优雅的办法是</p>
+<ol>
+<li>找到ebuild文件，比如abc-1.0.1.ebuild</li>
+<li>ebuild abc-1.0.1.ebuild compile</li>
+<li>ebuild abc-1.0.1.ebuild install</li>
+<li>ebuild abc-1.0.1.ebuild qmerge</li>
+</ol>
+<hr>
+<p>locale知识:</p>
+<pre><code>[oracle@game ~]$ locale
+LANG=en_US.UTF-8
+LC_CTYPE=&quot;en_US.UTF-8&quot;
+LC_NUMERIC=&quot;en_US.UTF-8&quot;
+LC_TIME=&quot;en_US.UTF-8&quot;
+LC_COLLATE=&quot;en_US.UTF-8&quot;
+LC_MONETARY=&quot;en_US.UTF-8&quot;
+LC_MESSAGES=&quot;en_US.UTF-8&quot;
+LC_PAPER=&quot;en_US.UTF-8&quot;
+LC_NAME=&quot;en_US.UTF-8&quot;
+LC_ADDRESS=&quot;en_US.UTF-8&quot;
+LC_TELEPHONE=&quot;en_US.UTF-8&quot;
+LC_MEASUREMENT=&quot;en_US.UTF-8&quot;
+LC_IDENTIFICATION=&quot;en_US.UTF-8&quot;
+LC_ALL=en_US.UTF-8
+[oracle@game ~]$ 
+</code></pre><p>locale把按照所涉及到的文化传统的各个方面分成12个大类，这12个大类分别是： </p>
+<p>1、语言符号及其分类(LC_CTYPE)<br>2、数字(LC_NUMERIC)<br>3、比较和排序习惯(LC_COLLATE)<br>4、时间显示格式(LC_TIME)<br>5、货币单位(LC_MONETARY)<br>6、信息主要是提示信息,错误信息,状态信息,标题,标签,按钮和菜单等(LC_MESSAGES)<br>7、姓名书写方式(LC_NAME)<br>8、地址书写方式(LC_ADDRESS)<br>9、电话号码书写方式(LC_TELEPHONE)<br>10、度量衡表达方式 (LC_MEASUREMENT)<br>11、默认纸张尺寸大小(LC_PAPER)<br>12、对locale自身包含信息的概述(LC_IDENTIFICATION)。</p>
+
+    </div>
+    <footer class="article-footer">
+      
+    
+      <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    
+    </footer>
+  </div>
+</article>
+
+
+
+
+  
+
+
+
+</div>
+
+
+</article>
+<!-- /home-wrap -->
+</div>
+
+    </div>
+    <!-- /main -->
+    
+    
+    <!-- footer -->
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2017</p>
+    <p>Theme by <a href="https://github.com/jelviss">Jelvis</a></p>
+</div>
+
+    </footer>
+    <!-- /footer -->
+
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      
+</div>
+
+    <!-- /back-top -->
+
+    
+    <script src="/js/iQuery.js"></script>
+    <script src="/js/biu.js"></script>
+</body>
+</html>

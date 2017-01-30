@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- head  -->
+<head>
+    <meta charset="UTF-8">       
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Jelvis">
+<meta name="keywords" content="个人博客,Jelvis,Jelvis个人博客,浣永强"/>
+<meta name="description" content="Jelvis的博客">
+<title>
+    
+    CoreOS学习笔记 | Jelvis&#39;s Blog
+    
+</title>
+
+<!--[if lt IE9]> 
+<script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+<style rel="sheetstyle" type="text/css">
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+</style>
+<![endif]-->
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/animate.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<link href="/css/mobile-styles.css" rel="stylesheet" media="screen and (max-device-width:1080px)"/>
+
+</head>
+<!-- /head -->
+
+<!-- body -->
+<body>
+
+    
+
+
+    <!-- main -->
+    <div class="main">
+        <div class="post-wrap animated bounceInUp">
+<article class="post">
+  <h1>CoreOS学习笔记</h1>
+  <p>以下为在windows上实验:</p>
+<ul>
+<li>首先利用vagrant + virtualbox安装CoreOS</li>
+</ul>
+<pre><code>git clone https://github.com/coreos/coreos-vagrant/
+cd coreos-vagrant
+cp config.rb.sample config.rb
+cp user-data.sample user-data
+</code></pre><ul>
+<li>修改 config.rb 文件</li>
+</ul>
+<pre><code># Size of the CoreOS cluster created by Vagrant
+$num_instances=3
+</code></pre><ul>
+<li>修改user-data</li>
+</ul>
+<p>去<a href="https://coreos.com/docs/cluster-management/setup/cluster-discovery/" target="_blank" rel="external">https://discovery.etcd.io/new?size=3</a>申请cluster  discovery修改discovery</p>
+<p>Coreos 的配置是利用cloud-config.yml<br>coreos-cloudinit -from-file=cloud-config.yaml</p>
+<p>启动虚拟机:</p>
+<pre><code>vagrant up --provision
+</code></pre><p>连接虚拟机core-01:</p>
+<pre><code>vagrant ssh core-01 -- -A
+</code></pre><h3 id="登陆后可以用fleet进行集群管理："><a href="#登陆后可以用fleet进行集群管理：" class="headerlink" title="登陆后可以用fleet进行集群管理："></a>登陆后可以用fleet进行集群管理：</h3><p>用<code>fleetctl list_machines</code>查看。</p>
+<p>(加上<code>-- -A</code>参数可以把密钥带入登陆的虚拟机，以便fleet直接从一个节点ssh到另一个节点,命令:<code>fleetctl ssh id</code>)</p>
+<p><code>此处遇到的问题:</code></p>
+<pre><code>1. fleetctl ssh id时报错The SSH_AUTH_SOCK environment variable must be set 
+    解决:
+    ssh-agent
+    ssh-add /home/core/fleet/fixtures/insecure_private_key(注意：权限必须是600)
+    echo $SSH_AUTH_SOCK
+2. 执行ssh-add时出现
+    Could not open a connection to your authentication agent
+　  ssh-agent bash
+</code></pre><p>　<br>这样就搭好了一个有三个服务器的CoreOS集群</p>
+<hr>
+<h3 id="有时候这样配置以后不能自动Discovery服务器-需要手动添加"><a href="#有时候这样配置以后不能自动Discovery服务器-需要手动添加" class="headerlink" title="有时候这样配置以后不能自动Discovery服务器,需要手动添加:"></a>有时候这样配置以后不能自动Discovery服务器,需要手动添加:</h3><pre><code>etcd -name=&quot;core-01&quot; -addr=&quot;172.16.8.101:4001&quot; -peer-addr=&quot;172.16.8.101:7001&quot; -peers=&quot;172.16.8.102:7001,172.16.8.103:7001&quot; -data-dir=&quot;/home/core/etcd&quot;  
+</code></pre><hr>
+<p>接下来跨节点执行命令:</p>
+<pre><code>$ fleetctl ssh 其他节点id cat /etc/environment
+COREOS_PUBLIC_IPV4=10.0.2.13
+COREOS_PRIVATE_IPV4=172.17.8.101
+</code></pre><p>在服务管理方面Fleet使用和Systemd相似的Unit文件进行配置。不同的地方在于，Fleet额外支持一个X-Fleet配置段，用于指定服务可以在哪些节点上运行。例如下面这个Unit文件。</p>
+<pre><code># Don&apos;t schedule on the same machine as other hello instances
+X-Conflicts=hello*.service
+X-Conflicts 指定了这个 Hello 服务不能运行在“任意已经分配了任何名字以hello开头的服务”的节点上
+</code></pre><p>  由于Fleet需要在集群层面上对服务进行管理，因此它的服务管理流程与Systemd略有不同。最明显的两个区别是：Fleet没有指定Unit文件必须放置在哪些目录下，而是直接通过参数的方式告诉fleetctl命令。使用上面的内容在用户的主目录下创建hello.service文件，然后来通过fleetctl start启动这个服务。</p>
+<p>现在建立一个hello.service:</p>
+<pre><code>[Unit]
+Description=Hello World
+After=docker.service
+Requires=docker.service
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill busybox1
+ExecStartPre=-/usr/bin/docker rm busybox1
+ExecStartPre=/usr/bin/docker pull busybox
+ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c &quot;while true; do echo Hello World; sleep 1; done&quot;
+ExecStop=/usr/bin/docker kill busybox1
+[X-Fleet]
+# Don&apos;t schedule on the same machine as other hello instances
+X-Conflicts=hello*.service
+</code></pre><hr>
+<pre><code>$ fleetctl start ${HOME}/hello.service
+Unit hello.service launched on 0acdd9bf.../10.0.2.15
+
+$ fleetctl list-units
+UNIT MACHINE ACTIVE SUB
+hello.service 0acdd9bf.../10.0.2.15 active running
+</code></pre><hr>
+<p>服务的提交阶段，这个步骤仅仅是在Fleet服务中完成的，目的是将指定的Unit文件添加到Fleet的记录缓存。此时Fleet并不会与Systemd进行通信。通过 fleetctl list-unit-files 和 fleetctl list-units 命令可以看到，Unit文件被提交后，并没有出现在后者的记录中。此时这个Unit文件已经被注册为一个Fleet可识别的Unit名称，但还不是一个可以执行的的服务。</p>
+<pre><code>$ fleetctl submit ${HOME}/hello.service
+$ fleetctl list-unit-files
+UNIT HASH DSTATE STATE TARGET
+hello.service 4bff33d inactive inactive -
+$ fleetctl list-units
+UNIT MACHINE ACTIVE SUB
+</code></pre><p> 其他命令:</p>
+<pre><code>$ fleetctl cat hello.service #查看
+$ fleetctl load hello.service #载入
+加载服务实际上是根据Unit文件的 X-Fleet 配置段条件，将服务传递到符合条件的特定节点的本地Systemd系统的过程，这个过程中Fleet通过DBus API与节点的Systemd进行了通信。
+
+$ fleetctl start hello.service #启动
+刚刚启动的服务会处于start-pre状态（服务正在执行Unit文件中的ExecStartPre部分操作），几分钟后再次查看服务的状态，服务状态就会变为running了。
+
+$ fleetctl status hello.service #查看状态
+$ fleetctl journal --lines 20 hello.service #指定行
+$ fleetctl journal -f hello.service #跟随日志输出
+
+$ fleetctl journal hello.service #查看日志
+$ fleetctl stop hello.service #停止
+$ fleetctl unload hello.service #卸载
+$ fleetctl destroy hello.service #销毁
+$ fleetctl ssh hello # 跳转到运行Hello服务的节点
+</code></pre><p><em><a href="http://www.infoq.com/cn/articles/what-is-coreos" target="_blank" rel="external">http://www.infoq.com/cn/articles/what-is-coreos</a></em><br><em><a href="http://www.infoq.com/cn/articles/coreos-analyse-etcd" target="_blank" rel="external">http://www.infoq.com/cn/articles/coreos-analyse-etcd</a></em></p>
+
+</article>
+<nav id="pagination">
+  
+    <a href="/2016/12/01/Openwrt配置SS智能翻墙/" class="prev">&larr; 上一页</a>
+  
+
+  
+    <a href="/2015/06/20/LNMP安装/" class="next">下一页 &rarr;</a>
+  
+</nav>
+
+<div class="clear"></div>
+</div>
+
+
+    </div>
+    <!-- /main -->
+    
+    
+    <!-- footer -->
+    <footer class="bottom animated fadeInUp">
+        <div class="copyright">
+    <p>Copyright ©  Jelvis 2017</p>
+    <p>Theme by <a href="https://github.com/jelviss">Jelvis</a></p>
+</div>
+
+    </footer>
+    <!-- /footer -->
+
+    <!-- back-top -->
+  <div class="back">
+      <a class="back-top" href="#" onclick="return false"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      
+      <a class="back-home" href="/"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
+    
+</div>
+
+    <!-- /back-top -->
+
+    
+    <script src="/js/iQuery.js"></script>
+    <script src="/js/biu.js"></script>
+</body>
+</html>
